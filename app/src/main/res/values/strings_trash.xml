@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Trash (ui/TrashPane.kt). -->
+<resources>
+    <plurals name="trash_items">
+        <item quantity="one">%d item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
+    <string name="trash_search">Search Trash</string>
+    <string name="trash_empty_title">Trash is empty</string>
+    <plurals name="trash_empty_body">
+        <item quantity="one">Deleted notes wait here for %d day, then go for good.</item>
+        <item quantity="other">Deleted notes wait here for %d days, then go for good.</item>
+    </plurals>
+    <string name="trash_empty_body_forever">Deleted notes wait here until you empty the trash.</string>
+    <string name="trash_empty_body_off">Trash is off, so deleting a note is permanent.</string>
+</resources>

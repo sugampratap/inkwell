@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Part 5: the colour picker's eyedropper (r2_selection_colour Frames 4-5; r3_text Frame 6) -->
+    <string name="picker_eyedropper">Eyedropper</string>
+    <string name="picker_eyedropper_hint">Tap the page to pick a colour.</string>
+    <string name="picker_eyedropper_hint_ink">Tap any ink on the page to pick its colour.</string>
+    <!-- A swatch's TalkBack name: its hue word, then its hex, e.g. "Blue, #1E88E5" -->
+    <string name="picker_swatch">%1$s, %2$s</string>
+
+    <!-- Part 5: the long-press menu (r2_selection_colour Frame 3) -->
+    <string name="lp_add_here">Add here</string>
+
+    <!-- The selection bar in Fluent (selbar-fluent.html): labels the bar and its More menu use -->
+    <string name="sel_flip_h">Flip horizontal</string>
+    <string name="sel_flip_v">Flip vertical</string>
+    <string name="sel_replace">Replace</string>
+</resources>

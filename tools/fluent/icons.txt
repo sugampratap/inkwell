@@ -1,0 +1,35 @@
+# Microsoft Fluent System Icons used by the app (the selection bar and its settings), one name per line,
+# as the file stem without _24_regular. Regular weight, 24 x 24. # comments.
+arrow_download
+arrow_reset
+arrow_rotate_clockwise
+arrow_rotate_counterclockwise
+arrow_swap
+clipboard_image
+clipboard_paste
+color
+copy
+copy_add
+crop
+cut
+delete
+edit
+flip_horizontal
+flip_vertical
+image
+image_copy
+lock_closed
+lock_open
+more_horizontal
+note
+position_backward
+position_forward
+position_to_back
+position_to_front
+select_all_on
+share_android
+table
+table_insert_column
+table_insert_row
+table_simple
+textbox

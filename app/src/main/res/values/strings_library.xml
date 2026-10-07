@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The library (home) screen: its sidebar, title row, shelf of covers and their menus. -->
+<resources>
+    <string name="library_all_notes">All notes</string>
+    <string name="library_favourites">Favourites</string>
+    <string name="library_folders">Folders</string>
+    <string name="library_new_folder">New folder</string>
+    <string name="library_new_tag">New tag</string>
+    <string name="library_settings">Settings</string>
+    <string name="library_new_note">New note</string>
+    <string name="library_continue">Continue writing</string>
+    <string name="library_kind_all">All</string>
+    <string name="library_kind_notebooks">Notebooks</string>
+    <string name="library_kind_pdfs">PDFs</string>
+    <string name="library_results_for">Results for “%1$s”</string>
+    <string name="library_add_favourite">Add to favourites</string>
+    <string name="library_remove_favourite">Remove from favourites</string>
+    <string name="library_cover_colour">Cover colour</string>
+    <string name="library_cover_auto">Automatic</string>
+    <string name="library_sort_and_view">Sort &amp; view</string>
+    <string name="library_layout_covers">Covers</string>
+    <string name="library_more_view_options">More view options…</string>
+    <string name="library_select">Select</string>
+    <string name="library_location">Library folder</string>
+    <string name="library_back">Back</string>
+    <string name="library_empty_hint">Your notes will stand here. Tap New note to start one.</string>
+    <string name="first_run_title">Choose where your notes live</string>
+    <string name="first_run_body">Inkwell keeps every note as a file. Pick a folder to keep and browse them in, or let Inkwell keep them in its own storage.</string>
+    <string name="first_run_later">You can change this later in Settings › Library &amp; files.</string>
+    <string name="empty_folder_title">This folder has no notes</string>
+    <string name="empty_timeline_title">Nothing in here yet</string>
+    <string name="empty_search_title">No notes match “%1$s”</string>
+    <string name="empty_search_body">Check the spelling, or try fewer words.</string>
+    <string name="empty_tag_title">Nothing has this colour yet</string>
+    <string name="empty_tag_body">Give a note the %1$s colour from its ⋮ menu and it shows here.</string>
+    <string name="empty_kind_notes">No notebooks here</string>
+    <string name="empty_kind_canvases">No canvases here</string>
+    <string name="empty_kind_pdfs">No PDFs here</string>
+    <string name="empty_kind_folders">No folders here</string>
+    <string name="empty_kind_body">The other tabs still show everything else in here.</string>
+    <string name="empty_recent_title">Nothing opened yet</string>
+    <string name="empty_recent_body">Notes and canvases you open show up here.</string>
+    <string name="empty_favourites_title">No favourites yet</string>
+    <string name="empty_favourites_body">Choose Add to favourites from a note’s ⋮ menu to keep it here.</string>
+    <string name="library_page_of">Page %1$d of %2$d</string>
+    <string name="library_pdf_short">PDF</string>
+    <string name="library_search_hint">Note names</string>
+    <!-- Joins two parts of a meta line: "12 pages · Today", "Library folder · Notes". -->
+    <string name="library_dot_join">%1$s · %2$s</string>
+</resources>

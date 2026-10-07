@@ -1,0 +1,596 @@
+package com.xnotes.platform
+
+import android.graphics.BlurMaskFilter
+import android.graphics.Canvas
+import android.graphics.DashPathEffect
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.PorterDuff
+import android.graphics.RectF
+import android.os.Build
+import android.text.TextPaint
+import com.xnotes.core.geometry.Pt
+import com.xnotes.core.geometry.Rect
+import com.xnotes.core.model.ImageData
+import com.xnotes.core.model.ImageEdit
+import com.xnotes.core.model.ImageGeometry
+import com.xnotes.core.model.Rgba
+import com.xnotes.core.pal.BlendMode
+import com.xnotes.core.pal.FillRule
+import com.xnotes.core.pal.FontSpec
+import com.xnotes.core.pal.Pen
+import com.xnotes.core.pal.RasterSurface
+import com.xnotes.core.pal.Renderer
+import com.xnotes.core.pal.TextFlags
+
+/**
+ * A [Renderer] backed by an [android.graphics.Canvas]. The same implementation
+ * draws to the on-screen view, into page-cache/thumbnail bitmaps, to PDF export
+ *
+ * Only translation and uniform scaling are used; the cumulative scale is tracked
+ * so a cosmetic pen's width stays constant in device pixels regardless of zoom.
+ */
+class AndroidRenderer(private val canvas: Canvas) : Renderer {
+
+    private val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        style = Paint.Style.STROKE
+        strokeJoin = Paint.Join.ROUND
+        strokeCap = Paint.Cap.ROUND
+    }
+    private val bitmapPaint = Paint(Paint.FILTER_BITMAP_FLAG).apply { isDither = true }
+    private val rasterBlendPaint = Paint(Paint.FILTER_BITMAP_FLAG).apply { isDither = true }
+    private val glowPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+    private val layerPaint = Paint()
+
+    // Scratch objects reused by every later call (rewind / set) rather than made per draw: a ruler
+    // frame's ticks, pills, glyphs and labels would otherwise allocate a Path, RectF or TextPaint
+    // each. Made on first use, so a renderer that never draws one pays nothing. The canvas copies a
+    // path or rect when it records the draw, so reusing them changes no pixel.
+    private var scratchPath: Path? = null
+    private var rasterDest: RectF? = null
+    private var runPaints: HashMap<FontSpec, TextPaint>? = null
+
+    /** The platform blend for [blend], or null when it has none (SRC_OVER, or below API 29). */
+    private fun nativeBlend(blend: BlendMode): android.graphics.BlendMode? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return null
+        return when (blend) {
+            BlendMode.MULTIPLY -> android.graphics.BlendMode.MULTIPLY
+            BlendMode.SCREEN -> android.graphics.BlendMode.SCREEN
+            BlendMode.SRC_OVER -> null
+        }
+    }
+
+    private val clipBounds = android.graphics.Rect()
+    private val scaleStack = ArrayDeque<Float>()
+    private var scaleX = 1f
+    private var scaleY = 1f
+    private val avgScale get() = ((scaleX + scaleY) / 2f).coerceAtLeast(1e-4f)
+
+    override fun save() {
+        canvas.save()
+        scaleStack.addLast(scaleX)
+        scaleStack.addLast(scaleY)
+    }
+
+    override fun restore() {
+        canvas.restore()
+        if (scaleStack.isNotEmpty()) {
+            scaleY = scaleStack.removeLast()
+            scaleX = scaleStack.removeLast()
+        }
+    }
+
+    override fun saveLayerAlpha(bounds: Rect, alpha: Double) {
+        canvas.saveLayerAlpha(
+            bounds.left.toFloat(), bounds.top.toFloat(), bounds.right.toFloat(), bounds.bottom.toFloat(),
+            (alpha.coerceIn(0.0, 1.0) * 255).toInt(),
+        )
+        scaleStack.addLast(scaleX)
+        scaleStack.addLast(scaleY)
+    }
+
+    // MULTIPLY and SCREEN use the W3C separable blends (BlendMode, API 29+), which over a
+    // transparent backdrop *deposit* the source and over ink blend — so they
+    // work the same in the transparent ink cache and on the composed screen. Below
+    // API 29 (and for SRC_OVER) we just use plain alpha compositing.
+    override fun saveLayerBlended(bounds: Rect, alpha: Double, blend: BlendMode) {
+        val native = nativeBlend(blend) ?: return saveLayerAlpha(bounds, alpha)
+        layerPaint.reset()
+        layerPaint.alpha = (alpha.coerceIn(0.0, 1.0) * 255).toInt()
+        layerPaint.blendMode = native
+        canvas.saveLayer(
+            bounds.left.toFloat(), bounds.top.toFloat(), bounds.right.toFloat(), bounds.bottom.toFloat(),
+            layerPaint,
+        )
+        scaleStack.addLast(scaleX)
+        scaleStack.addLast(scaleY)
+    }
+
+    override fun translate(dx: Double, dy: Double) {
+        canvas.translate(dx.toFloat(), dy.toFloat())
+    }
+
+    override fun rotate(degrees: Double) {
+        canvas.rotate(degrees.toFloat())
+        // A quarter turn swaps which axis each scale factor acts on (cosmetic pen math).
+        val d = ((degrees % 360.0) + 360.0) % 360.0
+        if (d == 90.0 || d == 270.0) {
+            val t = scaleX
+            scaleX = scaleY
+            scaleY = t
+        }
+    }
+
+    override fun scale(sx: Double, sy: Double) {
+        canvas.scale(sx.toFloat(), sy.toFloat())
+        scaleX *= sx.toFloat()
+        scaleY *= sy.toFloat()
+    }
+
+    override fun clipRect(rect: Rect) {
+        canvas.clipRect(rect.left.toFloat(), rect.top.toFloat(), rect.right.toFloat(), rect.bottom.toFloat())
+    }
+
+    override fun clipOutRect(rect: Rect): Boolean {
+        // Like [clipRect], not antialiased, so a clip in and the same clip out split the pixels
+        // between them exactly: each pixel is on one side by its centre, never on both or neither.
+        canvas.clipOutRect(rect.left.toFloat(), rect.top.toFloat(), rect.right.toFloat(), rect.bottom.toFloat())
+        return true
+    }
+
+    override fun clear() {
+        canvas.drawColor(0, PorterDuff.Mode.CLEAR)
+    }
+
+    override fun fillBackground(rect: Rect, color: Rgba) = fillRect(rect, color)
+
+    override fun fillRect(rect: Rect, color: Rgba) {
+        fillPaint.color = color.toArgb()
+        canvas.drawRect(rect.left.toFloat(), rect.top.toFloat(), rect.right.toFloat(), rect.bottom.toFloat(), fillPaint)
+    }
+
+    override fun fillPolygon(points: List<Pt>, color: Rgba, rule: FillRule) {
+        if (points.size < 3) return
+        fillPaint.color = color.toArgb()
+        canvas.drawPath(buildPath(points, close = true, rule), fillPaint)
+    }
+
+    override fun fillCircle(center: Pt, radius: Double, color: Rgba) {
+        fillPaint.color = color.toArgb()
+        canvas.drawCircle(center.x.toFloat(), center.y.toFloat(), radius.toFloat(), fillPaint)
+    }
+
+    // The whole swept-disc ribbon as one path: every disc and bridging quad is wound the same way
+    // under WINDING, so overlaps union into solid ink (anti-aliased only along the true outer
+    // silhouette, no interior seams, no winding-cancelled gap at a sharp turn). One draw call keeps
+    // the repainted-every-frame live stroke cheap. Built straight from the packed float geometry
+    // (the [Geometry.ribbonQuad] math inlined) so a dense page allocates nothing per point.
+    override fun fillDiskRibbon(centers: FloatArray, radii: FloatArray, color: Rgba) =
+        fillDiskRibbon(centers, radii, 0, minOf(centers.size / 2, radii.size), color)
+
+    override fun fillDiskRibbon(centers: FloatArray, radii: FloatArray, from: Int, count: Int, color: Rgba) {
+        if (count <= 0) return
+        val end = from + count
+        fillPaint.color = color.toArgb()
+        // The renderer's scratch path, rewound: the live stroke is filled every frame, and a fresh
+        // Path each time was a native allocation per frame for the same outline.
+        val path = scratchPath()
+        path.fillType = Path.FillType.WINDING
+        for (i in from until end - 1) {
+            val x0 = centers[2 * i]
+            val y0 = centers[2 * i + 1]
+            val x1 = centers[2 * i + 2]
+            val y1 = centers[2 * i + 3]
+            val dx = x1 - x0
+            val dy = y1 - y0
+            val len = kotlin.math.hypot(dx, dy)
+            if (len < 1e-9f) continue
+            val nx = -dy / len
+            val ny = dx / len
+            val r0 = radii[i]
+            val r1 = radii[i + 1]
+            val ax = x0 + nx * r0
+            val ay = y0 + ny * r0
+            val bx = x1 + nx * r1
+            val by = y1 + ny * r1
+            val cx = x1 - nx * r1
+            val cy = y1 - ny * r1
+            val ex = x0 - nx * r0
+            val ey = y0 - ny * r0
+            // Consistent (positive-area) winding so overlapping quads union rather than cancel.
+            if ((bx - ax) * (cy - ay) - (by - ay) * (cx - ax) >= 0f) {
+                path.moveTo(ax, ay)
+                path.lineTo(bx, by)
+                path.lineTo(cx, cy)
+                path.lineTo(ex, ey)
+            } else {
+                path.moveTo(ex, ey)
+                path.lineTo(cx, cy)
+                path.lineTo(bx, by)
+                path.lineTo(ax, ay)
+            }
+            path.close()
+        }
+        for (i in from until end) {
+            val r = radii[i]
+            if (r > 0f) path.addCircle(centers[2 * i], centers[2 * i + 1], r, Path.Direction.CW)
+        }
+        canvas.drawPath(path, fillPaint)
+    }
+
+    // Graphite ([com.xnotes.core.stroke.Graphite]): the same swept-disc ribbon as one path, filled
+    // through the shared grain shader in the ink's colour at its alpha. The paint and the path are
+    // this renderer's own and reused; the shader and the bitmap behind it exist once for the app.
+    // Only a pencil stroke reaches here, so nothing above pays for it.
+    override fun fillGrainRibbon(centers: FloatArray, radii: FloatArray, from: Int, count: Int, color: Rgba) {
+        if (count <= 0) return
+        val paint = grainPaint ?: Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG).apply {
+            style = Paint.Style.FILL
+            shader = GraphiteGrain.shader
+        }.also { grainPaint = it }
+        // With a shader set only the paint's alpha counts; the filter brings the colour in.
+        paint.color = color.toArgb()
+        paint.colorFilter = GraphiteGrain.tint(color.withAlpha(255).toArgb())
+        val path = grainPath ?: Path().also { grainPath = it }
+        path.rewind()
+        path.fillType = Path.FillType.WINDING
+        val end = from + count
+        for (i in from until end - 1) {
+            val x0 = centers[2 * i]
+            val y0 = centers[2 * i + 1]
+            val x1 = centers[2 * i + 2]
+            val y1 = centers[2 * i + 3]
+            val dx = x1 - x0
+            val dy = y1 - y0
+            val len = kotlin.math.hypot(dx, dy)
+            if (len < 1e-9f) continue
+            val nx = -dy / len
+            val ny = dx / len
+            val r0 = radii[i]
+            val r1 = radii[i + 1]
+            if (r0 <= 0f && r1 <= 0f) continue
+            val ax = x0 + nx * r0
+            val ay = y0 + ny * r0
+            val bx = x1 + nx * r1
+            val by = y1 + ny * r1
+            val cx = x1 - nx * r1
+            val cy = y1 - ny * r1
+            val ex = x0 - nx * r0
+            val ey = y0 - ny * r0
+            // Wound the same way as every disc, so the pieces union instead of cancelling.
+            if ((bx - ax) * (cy - ay) - (by - ay) * (cx - ax) >= 0f) {
+                path.moveTo(ax, ay)
+                path.lineTo(bx, by)
+                path.lineTo(cx, cy)
+                path.lineTo(ex, ey)
+            } else {
+                path.moveTo(ex, ey)
+                path.lineTo(cx, cy)
+                path.lineTo(bx, by)
+                path.lineTo(ax, ay)
+            }
+            path.close()
+        }
+        for (i in from until end) {
+            val r = radii[i]
+            if (r > 0f) path.addCircle(centers[2 * i], centers[2 * i + 1], r, Path.Direction.CW)
+        }
+        canvas.drawPath(path, paint)
+    }
+
+    private var grainPaint: Paint? = null
+    private var grainPath: Path? = null
+
+    override val masksGrain: Boolean get() = true
+
+    // The pencil's wet cache ([com.xnotes.canvas.WetInkCache]): the layer's coverage, kept by
+    // SRC_IN, takes the ink's colour through the same grain shader [fillGrainRibbon] fills with,
+    // sampled the same way and in the same local coordinates, so the paper's tooth lands on the
+    // same pixels. drawPaint covers the layer whole, so nothing in it is left out of the grain.
+    override fun maskGrain(color: Rgba) {
+        val paint = grainMaskPaint ?: Paint(Paint.FILTER_BITMAP_FLAG).apply {
+            shader = GraphiteGrain.shader
+            xfermode = android.graphics.PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        }.also { grainMaskPaint = it }
+        val opaque = color.withAlpha(255).toArgb()
+        paint.color = opaque
+        paint.colorFilter = GraphiteGrain.tint(opaque)
+        canvas.drawPaint(paint)
+    }
+
+    private var grainMaskPaint: Paint? = null
+
+    // The blur radius is a page-space length: the canvas scale grows it with zoom,
+    // so the halo tracks the ink (exactly like a non-cosmetic pen width). INNER blur
+    // keeps the soft fill inside the shape (the white core); NORMAL spreads it both
+    // ways (the outer halo).
+    override fun fillPolygonGlow(pts: FloatArray, color: Rgba, rule: FillRule, blurRadius: Double, inner: Boolean) {
+        if (pts.size < 6) return
+        val path = buildPath(pts, close = true, rule)
+        if (blurRadius <= 0.0) {
+            fillPaint.color = color.toArgb()
+            canvas.drawPath(path, fillPaint)
+            return
+        }
+        glowPaint.color = color.toArgb()
+        glowPaint.maskFilter = BlurMaskFilter(blurRadius.toFloat().coerceAtLeast(0.1f), blurStyle(inner))
+        canvas.drawPath(path, glowPaint)
+        glowPaint.maskFilter = null
+    }
+
+    override fun fillCircleGlow(center: Pt, radius: Double, color: Rgba, blurRadius: Double, inner: Boolean) {
+        if (blurRadius <= 0.0) return fillCircle(center, radius, color)
+        glowPaint.color = color.toArgb()
+        glowPaint.maskFilter = BlurMaskFilter(blurRadius.toFloat().coerceAtLeast(0.1f), blurStyle(inner))
+        canvas.drawCircle(center.x.toFloat(), center.y.toFloat(), radius.toFloat(), glowPaint)
+        glowPaint.maskFilter = null
+    }
+
+    private fun blurStyle(inner: Boolean) =
+        if (inner) BlurMaskFilter.Blur.INNER else BlurMaskFilter.Blur.NORMAL
+
+    override fun fillEllipse(center: Pt, rx: Double, ry: Double, color: Rgba) {
+        fillPaint.color = color.toArgb()
+        canvas.drawOval(
+            (center.x - rx).toFloat(), (center.y - ry).toFloat(),
+            (center.x + rx).toFloat(), (center.y + ry).toFloat(),
+            fillPaint,
+        )
+    }
+
+    override fun strokeRect(rect: Rect, pen: Pen) {
+        applyPen(pen)
+        canvas.drawRect(rect.left.toFloat(), rect.top.toFloat(), rect.right.toFloat(), rect.bottom.toFloat(), strokePaint)
+    }
+
+    override fun strokePolyline(points: List<Pt>, pen: Pen) {
+        if (points.size < 2) return
+        applyPen(pen)
+        canvas.drawPath(buildPath(points, close = false, FillRule.NONZERO), strokePaint)
+    }
+
+    override fun strokePolyline(pts: FloatArray, pen: Pen) = strokePolyline(pts, 0, pts.size / 2, pen)
+
+    override fun strokePolyline(pts: FloatArray, from: Int, count: Int, pen: Pen) {
+        if (count < 2) return
+        applyPen(pen)
+        val path = Path()
+        path.moveTo(pts[2 * from], pts[2 * from + 1])
+        for (i in 1 until count) path.lineTo(pts[2 * (from + i)], pts[2 * (from + i) + 1])
+        canvas.drawPath(path, strokePaint)
+    }
+
+    override fun strokePolygon(points: List<Pt>, pen: Pen) {
+        if (points.size < 2) return
+        applyPen(pen)
+        canvas.drawPath(buildPath(points, close = true, FillRule.NONZERO), strokePaint)
+    }
+
+    override fun strokeEllipse(center: Pt, rx: Double, ry: Double, pen: Pen) {
+        applyPen(pen)
+        canvas.drawOval(
+            (center.x - rx).toFloat(), (center.y - ry).toFloat(),
+            (center.x + rx).toFloat(), (center.y + ry).toFloat(),
+            strokePaint,
+        )
+    }
+
+    override fun drawRaster(raster: RasterSurface, dest: Rect, src: Rect?) {
+        val bmp = (raster as? AndroidRasterSurface)?.bitmap ?: return
+        if (bmp.isRecycled) return
+        val srcRect = src?.let {
+            android.graphics.Rect(it.left.toInt(), it.top.toInt(), it.right.toInt(), it.bottom.toInt())
+        }
+        val destRect = rasterDestRect(dest)
+        canvas.drawBitmap(bmp, srcRect, destRect, bitmapPaint)
+    }
+
+    // MULTIPLY uses the W3C separable blend (API 29+); below that (and for SRC_OVER) it falls back
+    // to plain alpha compositing, matching saveLayerBlended. Composites a pre-rendered highlighter
+    // ribbon onto the live page each frame in one blit, no per-frame ribbon tessellation.
+    override fun drawRasterBlended(raster: RasterSurface, dest: Rect, alpha: Double, blend: BlendMode, src: Rect?) {
+        val bmp = (raster as? AndroidRasterSurface)?.bitmap ?: return
+        if (bmp.isRecycled) return
+        rasterBlendPaint.reset()
+        rasterBlendPaint.isFilterBitmap = true
+        rasterBlendPaint.isDither = true
+        rasterBlendPaint.alpha = (alpha.coerceIn(0.0, 1.0) * 255).toInt()
+        nativeBlend(blend)?.let { rasterBlendPaint.blendMode = it }
+        val srcRect = src?.let {
+            android.graphics.Rect(it.left.toInt(), it.top.toInt(), it.right.toInt(), it.bottom.toInt())
+        }
+        val destRect = rasterDestRect(dest)
+        canvas.drawBitmap(bmp, srcRect, destRect, rasterBlendPaint)
+    }
+
+    private fun rasterDestRect(dest: Rect): RectF {
+        val r = rasterDest ?: RectF().also { rasterDest = it }
+        r.set(dest.left.toFloat(), dest.top.toFloat(), dest.right.toFloat(), dest.bottom.toFloat())
+        return r
+    }
+
+    override fun drawImage(image: ImageData, dest: Rect, orientation: Int, angle: Double) =
+        drawImage(image, dest, orientation, angle, ImageEdit.NONE)
+
+    /**
+     * Place an image from [ImageBitmapCache], at the size step its destination needs in device
+     * pixels (for the whole source, so a tight crop at a deep zoom still asks for enough). The
+     * quarter turn and the free angle are one canvas rotation about the destination's centre, and
+     * the mirror a negative scale inside it, so they cost nothing per pixel; the crop is just the
+     * source rect of the blit. On the UI thread a size not yet decoded draws the nearest size held,
+     * or a quiet placeholder, while the cache decodes it in the background and asks for a repaint.
+     */
+    override fun drawImage(image: ImageData, dest: Rect, orientation: Int, angle: Double, edit: ImageEdit) {
+        if (dest.w <= 0.0 || dest.h <= 0.0) return
+        val devW = dest.w * scaleX
+        val devH = dest.h * scaleY
+        val o = ImageGeometry.normOrientation(orientation)
+        val crop = edit.effectiveCrop
+        val plain = crop == null && !edit.flipX && !edit.flipY
+        if (o == 0 && angle == 0.0 && plain && drawVectorSlice(image, dest, devW.toInt(), devH.toInt())) return
+        val turned = o == 90 || o == 270
+        // Device pixels across the upright, cropped picture, then across the whole source.
+        val upDevW = if (turned) devH else devW
+        val upDevH = if (turned) devW else devH
+        val fullDevW = upDevW / (crop?.w ?: 1.0)
+        val fullDevH = upDevH / (crop?.h ?: 1.0)
+        val wanted = maxOf(fullDevW, fullDevH).coerceIn(1.0, DECODE_CAP_PX.toDouble()).toInt()
+        val uw = (if (turned) dest.h else dest.w).toFloat()
+        val uh = (if (turned) dest.w else dest.h).toFloat()
+        val degrees = o + Math.toDegrees(angle)
+        canvas.save()
+        canvas.translate(((dest.left + dest.right) / 2.0).toFloat(), ((dest.top + dest.bottom) / 2.0).toFloat())
+        if (degrees != 0.0) canvas.rotate(degrees.toFloat())
+        if (edit.flipX || edit.flipY) canvas.scale(if (edit.flipX) -1f else 1f, if (edit.flipY) -1f else 1f)
+        val bmp = ImageBitmapCache.obtain(image, wanted)
+        imageDest.set(-uw / 2f, -uh / 2f, uw / 2f, uh / 2f)
+        if (bmp == null || bmp.isRecycled) {
+            drawImagePlaceholder(imageDest)
+        } else if (crop == null) {
+            canvas.drawBitmap(bmp, null, imageDest, bitmapPaint)
+        } else {
+            imageSrc.set(
+                (crop.l * bmp.width).toInt(),
+                (crop.t * bmp.height).toInt(),
+                kotlin.math.ceil(crop.r * bmp.width).toInt().coerceAtMost(bmp.width),
+                kotlin.math.ceil(crop.b * bmp.height).toInt().coerceAtMost(bmp.height),
+            )
+            if (imageSrc.width() <= 0 || imageSrc.height() <= 0) drawImagePlaceholder(imageDest)
+            else canvas.drawBitmap(bmp, imageSrc, imageDest, bitmapPaint)
+        }
+        canvas.restore()
+    }
+
+    // A neutral, rounded wash where a picture is about to land: it holds the space without a flash
+    // of a hard grey box, and reads on light paper and dark alike.
+    private fun drawImagePlaceholder(r: RectF) {
+        placeholderPaint.color = PLACEHOLDER_ARGB
+        val radius = (minOf(r.width(), r.height()) * 0.04f).coerceAtMost(12f / avgScale)
+        canvas.drawRoundRect(r, radius, radius, placeholderPaint)
+    }
+
+    private val imageDest = RectF()
+    private val imageSrc = android.graphics.Rect()
+    private val placeholderPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { style = Paint.Style.FILL }
+
+    /**
+     * Draw an unrotated vector image by rasterizing only the part the clip can show. The clip is
+     * this canvas's own, so the destination surface bounds it: the sharp viewport asks for the
+     * visible sliver instead of the whole document at a 4096 px bucket. Returns false when the
+     * image isn't a vector (or the slice failed) so the caller falls back to the raster path.
+     */
+    private fun drawVectorSlice(image: ImageData, dest: Rect, devW: Int, devH: Int): Boolean {
+        val path = image.file.path
+        if (!ImageDecoder.isVector(path)) return false
+        if (!canvas.getClipBounds(clipBounds)) return true // clipped away entirely
+        val l = maxOf(dest.left, clipBounds.left.toDouble())
+        val t = maxOf(dest.top, clipBounds.top.toDouble())
+        val r = minOf(dest.right, clipBounds.right.toDouble())
+        val b = minOf(dest.bottom, clipBounds.bottom.toDouble())
+        if (r <= l || b <= t) return true
+        val slice = ImageDecoder.renderVectorSlice(
+            path,
+            (l - dest.left) / dest.w, (t - dest.top) / dest.h,
+            (r - dest.left) / dest.w, (b - dest.top) / dest.h,
+            devW, devH,
+        ) ?: return false
+        canvas.drawBitmap(
+            slice.bitmap,
+            null,
+            RectF(
+                (dest.left + slice.u0 * dest.w).toFloat(),
+                (dest.top + slice.v0 * dest.h).toFloat(),
+                (dest.left + slice.u1 * dest.w).toFloat(),
+                (dest.top + slice.v1 * dest.h).toFloat(),
+            ),
+            bitmapPaint,
+        )
+        return true
+    }
+
+    override fun drawText(text: String, rect: Rect, font: FontSpec, color: Rgba, flags: TextFlags) {
+        if (text.isEmpty()) return
+        val paint = AndroidText.textPaint(font, color.toArgb())
+        val layout = AndroidText.layout(text, rect.w.toInt(), paint)
+        canvas.save()
+        canvas.translate(rect.left.toFloat(), rect.top.toFloat())
+        layout.draw(canvas)
+        canvas.restore()
+    }
+
+    override fun drawTextRun(text: String, x: Double, baseline: Double, font: FontSpec, color: Rgba) {
+        if (text.isEmpty()) return
+        // One paint per font for this renderer: the typeface is resolved once, only the colour changes.
+        val paints = runPaints ?: HashMap<FontSpec, TextPaint>(4).also { runPaints = it }
+        val paint = paints.getOrPut(font) { AndroidText.textPaint(font) }
+        paint.color = color.toArgb()
+        canvas.drawText(text, x.toFloat(), baseline.toFloat(), paint)
+    }
+
+    override fun drawMath(
+        latex: String,
+        x: Double,
+        baseline: Double,
+        sizePt: Double,
+        color: Rgba,
+        display: Boolean,
+    ) {
+        MathRendering.draw(canvas, latex, x, baseline, sizePt, color, display)
+    }
+
+    private fun applyPen(pen: Pen) {
+        strokePaint.color = pen.color.toArgb()
+        val width = if (pen.cosmetic) (pen.width / avgScale) else pen.width
+        strokePaint.strokeWidth = width.toFloat()
+        // A page-space outward blur for the neon halo on shape outlines (NORMAL = both sides).
+        strokePaint.maskFilter = if (pen.glowRadius > 0.0) {
+            BlurMaskFilter(pen.glowRadius.toFloat().coerceAtLeast(0.1f), BlurMaskFilter.Blur.NORMAL)
+        } else {
+            null
+        }
+        strokePaint.pathEffect = if (pen.dashed) {
+            // Cosmetic dashes (chrome) keep a fixed device-pixel rhythm; content dashes (the
+            // dashed pen) are specified in content px and so scale with zoom like the ink.
+            val s = if (pen.cosmetic) 1.0 / avgScale else 1.0
+            val on = (pen.dashOn * s).toFloat().coerceAtLeast(0.1f)
+            val off = (pen.dashGap * s).toFloat().coerceAtLeast(0.1f)
+            DashPathEffect(floatArrayOf(on, off), (pen.dashPhase * s).toFloat())
+        } else {
+            null
+        }
+    }
+
+    private fun buildPath(points: List<Pt>, close: Boolean, rule: FillRule): Path {
+        val path = scratchPath()
+        path.fillType = if (rule == FillRule.EVEN_ODD) Path.FillType.EVEN_ODD else Path.FillType.WINDING
+        path.moveTo(points[0].x.toFloat(), points[0].y.toFloat())
+        for (i in 1 until points.size) path.lineTo(points[i].x.toFloat(), points[i].y.toFloat())
+        if (close) path.close()
+        return path
+    }
+
+    private fun buildPath(pts: FloatArray, close: Boolean, rule: FillRule): Path {
+        val path = scratchPath()
+        path.fillType = if (rule == FillRule.EVEN_ODD) Path.FillType.EVEN_ODD else Path.FillType.WINDING
+        path.moveTo(pts[0], pts[1])
+        for (i in 1 until pts.size / 2) path.lineTo(pts[2 * i], pts[2 * i + 1])
+        if (close) path.close()
+        return path
+    }
+
+    /** [scratchPath], emptied. Each [buildPath] result is drawn before the next is built. */
+    private fun scratchPath(): Path {
+        val path = scratchPath ?: Path().also { scratchPath = it }
+        path.rewind()
+        return path
+    }
+
+    companion object {
+        /** Long-edge cap (device px) for an on-screen image decode, so extreme zoom can't OOM. */
+        private const val DECODE_CAP_PX = 4096
+
+        /** The placeholder's wash: mid grey at a low alpha, so it sits on any paper colour. */
+        private const val PLACEHOLDER_ARGB = 0x2E808080
+    }
+}

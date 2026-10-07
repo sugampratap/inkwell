@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- B2 Part 4: tool options. Every new tool-card string lives here; existing ones stay where they were. -->
+
+    <!-- Highlighter (TO Frame 1) -->
+    <string name="to_hl_straight_on_hint">Each stroke is laid as one straight line, from where you start to where you lift.</string>
+    <string name="to_hl_lighten_hint">For dark paper: the marker lightens what\'s under it instead of darkening it.</string>
+    <!-- The preview's handwritten line of notes: a picture, not a sentence to translate. -->
+    <string name="to_hl_sample_lead" translatable="false">next:</string>
+    <string name="to_hl_sample_text" translatable="false">Carnot cycle + efficiency</string>
+
+    <!-- Eraser (TO Frame 2) -->
+    <string name="to_eraser_hint_stroke">Touch a stroke and all of it goes.</string>
+    <string name="to_eraser_hint_area">Only the ink under the eraser goes. The rest of the stroke stays.</string>
+    <string name="to_eraser_switch_back">Switch back after erasing</string>
+    <string name="to_eraser_switch_back_hint">Picks up the pen or highlighter you had before as soon as you lift.</string>
+    <string name="to_eraser_markups_hint">Also takes off highlights and lines on the PDF\'s text.</string>
+    <string name="to_eraser_zoom_hint">Off: the eraser grows and shrinks with the page.</string>
+
+    <!-- PDF text markup -->
+    <string name="to_markup_caption">A drag over the PDF\'s text</string>
+    <string name="to_markup_intensity_hint">How deep a new highlight\'s colour goes.</string>
+    <!-- Drawn on the markup tiles: a picture of a word. -->
+    <string name="to_markup_art_text" translatable="false">Text</string>
+
+    <!-- Shapes (TO Frame 3) -->
+    <string name="to_shape_line">Line</string>
+    <string name="to_shape_arrow">Arrow</string>
+    <string name="to_shape_rectangle">Rectangle</string>
+    <string name="to_shape_ellipse">Ellipse</string>
+    <string name="to_shape_circle">Circle</string>
+    <string name="to_shape_triangle">Triangle</string>
+    <!-- %1$s is a colour dot followed by the ink's name, e.g. "Navy" or "#3A7BD5". -->
+    <string name="to_shape_ink_hint">Draws in the toolbar\'s ink, %1$s.</string>
+    <string name="to_ink_navy">Navy</string>
+    <string name="to_ink_blue">Blue</string>
+    <string name="to_ink_red">Red</string>
+    <string name="to_ink_green">Green</string>
+    <string name="to_ink_amber">Amber</string>
+    <string name="to_fill_opacity">Fill opacity</string>
+    <string name="to_fill_open_hint">Lines and arrows have no inside to fill.</string>
+
+    <!-- Tape (TO Frame 5) -->
+    <string name="to_tape_in_note">In this note</string>
+    <plurals name="to_tape_strips">
+        <item quantity="one">%d strip</item>
+        <item quantity="other">%d strips</item>
+    </plurals>
+    <plurals name="to_tape_peeled">
+        <item quantity="one">%d peeled back</item>
+        <item quantity="other">%d peeled back</item>
+    </plurals>
+    <!-- "3 strips, 1 peeled back" -->
+    <string name="to_tape_counts">%1$s, %2$s</string>
+
+    <!-- Lasso (r2_selection_colour Frame 1) -->
+    <string name="to_lasso_select_what">what the lasso picks up</string>
+</resources>

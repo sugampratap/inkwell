@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- Inkwell icon, foreground layer: a lined page with a pen resting on it (concept R4, amber). 108-unit adaptive canvas, transparent; content at 86% for the safe zone. -->
+  <defs>
+    <filter id="bp" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="2.6"/></filter>
+    <linearGradient id="pg" x1="0" y1="0" x2=".6" y2="1"><stop offset="0" stop-color="#FFFFFF"/><stop offset="1" stop-color="#F2EEE7"/></linearGradient>
+    <linearGradient id="pen" x1="0" y1="-3.4" x2="0" y2="3.4" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#5A5E66"/><stop offset=".45" stop-color="#2A2C31"/><stop offset="1" stop-color="#121316"/></linearGradient>
+  </defs>
+  <g transform="translate(54 54) scale(0.86) translate(-54 -54)">
+    <rect x="32" y="24" width="44" height="60" rx="7" fill="#000" fill-opacity=".35" filter="url(#bp)" transform="translate(1 3)"/>
+    <rect x="32" y="24" width="44" height="60" rx="7" fill="url(#pg)"/>
+    <g stroke="#26282B" stroke-width="3.2" stroke-linecap="round" fill="none">
+      <path d="M40,38 L67,38"/><path d="M40,47 L69,47"/><path d="M40,56 L63,56" stroke-opacity=".8"/><path d="M40,65 L53,65" stroke-opacity=".6"/>
+    </g>
+    <path d="M39,25 L69,25" stroke="#fff" stroke-opacity=".9" stroke-width="1" stroke-linecap="round"/>
+    <g transform="translate(50 82) rotate(-35)">
+      <rect x="4" y="-3.4" width="38" height="6.8" rx="3.4" fill="#000" fill-opacity=".35" filter="url(#bp)" transform="translate(-1 3.5)"/>
+      <path d="M0.6,-0.5 L6,-3.4 L6,3.4 L0.6,0.5 Q0,0 0.6,-0.5 Z" fill="#C9A45A"/>
+      <rect x="5.5" y="-3.4" width="36.5" height="6.8" rx="3.4" fill="url(#pen)"/>
+      <rect x="8" y="-2.4" width="31" height="1.2" rx=".6" fill="#fff" fill-opacity=".35"/>
+      <rect x="30" y="-3.4" width="2" height="6.8" fill="#C9A45A"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings › Writing & S Pen and Pages & paper (ui/SettingsWriting.kt, ui/SettingsPages.kt). -->
+<resources>
+    <string name="settings_tap_pan">Pan on / off</string>
+    <string name="settings_tap_eraser">Eraser on / off</string>
+    <string name="settings_tap_previous">Previous tool</string>
+    <string name="settings_hover_why_off">Only for Eraser or Pan</string>
+    <string name="settings_other_styluses">Other styluses</string>
+    <string name="settings_other_styluses_desc">Huawei M-Pencil, HONOR Magic-Pencil, Redmi Smart Pen</string>
+    <string name="settings_others_none">None set</string>
+    <plurals name="settings_others_set">
+        <item quantity="one">%d set</item>
+        <item quantity="other">%d set</item>
+    </plurals>
+    <string name="settings_custom_size_range">Each side from 10 to 2000 mm</string>
+</resources>

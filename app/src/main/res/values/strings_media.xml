@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Part 7: tables (r3_table_image) -->
+    <string name="ptable_size_value">%1$d × %2$d</string>
+    <plurals name="ptable_n_rows">
+        <item quantity="one">%d row</item>
+        <item quantity="other">%d rows</item>
+    </plurals>
+    <plurals name="ptable_n_columns">
+        <item quantity="one">%d column</item>
+        <item quantity="other">%d columns</item>
+    </plurals>
+    <string name="ptable_size_text">%1$s, %2$s</string>
+    <string name="ptable_grid">Rows and columns</string>
+    <string name="table_size">Size</string>
+    <string name="media_custom_colour">Custom colour</string>
+
+    <!-- Part 7: audio (r3_audio) -->
+    <string name="player_speed">Playback speed</string>
+    <string name="player_speed_normal">Normal</string>
+    <string name="player_speed_note">Synced notes replay at the same speed. Pitch stays natural.</string>
+    <string name="player_speed_a11y">Playback speed, %1$s</string>
+</resources>

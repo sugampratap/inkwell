@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108">
+  <!-- Inkwell icon, background layer: deep saffron (amber) tile with a top-left sheen and a moulded edge. 108-unit adaptive canvas. -->
+  <defs>
+    <linearGradient id="tile" x1="0" y1="0" x2="108" y2="108" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#FFB43C"/><stop offset="1" stop-color="#D9701A"/></linearGradient>
+    <radialGradient id="sheen" cx="28" cy="20" r="72" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".30"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="lip" x1="0" y1="18" x2="0" y2="90" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".12" stop-color="#fff" stop-opacity="0"/><stop offset=".88" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient>
+  </defs>
+  <rect width="108" height="108" fill="url(#tile)"/>
+  <rect width="108" height="108" fill="url(#sheen)"/>
+  <rect width="108" height="108" fill="url(#lip)"/>
+</svg>

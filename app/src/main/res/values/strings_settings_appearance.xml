@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings › Appearance (ui/SettingsAppearance.kt, ui/MaterialColourPicker.kt). -->
+<resources>
+    <string name="appearance_paper_hint">White and warm paper with the marigold accent, tuned by hand for writing.</string>
+    <string name="appearance_system_hint">Built from your wallpaper. On Android 11 and older this uses the default accent.</string>
+    <string name="appearance_paper_sub">Inkwell’s own</string>
+    <string name="appearance_system_sub">From your wallpaper</string>
+    <string name="appearance_single_sub">One colour</string>
+    <string name="appearance_dual_sub">Accent + surface</string>
+    <string name="appearance_colour">Colour</string>
+    <string name="appearance_softer">Softer</string>
+    <string name="appearance_standard">Standard</string>
+    <string name="appearance_crisper">Crisper</string>
+</resources>

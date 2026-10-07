@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pen popover -->
+    <string name="pen_type_fountain">Fountain</string>
+    <string name="pen_type_ballpoint">Ballpoint</string>
+    <string name="pen_type_brush">Brush</string>
+    <string name="pen_type_calligraphy">Calligraphy</string>
+    <string name="pen_type_quill">Quill</string>
+    <string name="pen_type_pencil">Pencil</string>
+    <string name="pen_type_dashed">Dashed</string>
+    <string name="pen_thickness">Thickness</string>
+    <string name="pen_pressure">Pressure sensitivity</string>
+    <string name="pen_off">Off</string>
+    <string name="pen_stabilisation">Stabilisation</string>
+    <string name="stab_low">Low</string>
+    <string name="stab_medium">Medium</string>
+    <string name="stab_medium_short">Med</string>
+    <string name="stab_high">High</string>
+    <string name="pen_contrast">Thick and thin</string>
+    <string name="pen_speed_thinning">Thins with speed</string>
+    <string name="pen_tip">Tip width</string>
+    <string name="pen_same_size_any_zoom">Same size at any zoom</string>
+    <string name="pen_glow">Glow</string>
+    <string name="hl_opacity">Opacity</string>
+    <string name="hl_straight">Always straight</string>
+    <string name="hl_straight_hint">Or hold the pen still at the end of a stroke to straighten it.</string>
+    <string name="hl_dark_paper">Lighten instead</string>
+    <string name="laser_stays">Trail stays for</string>
+    <string name="laser_hint">Point things out. The trail fades a moment after you stop.</string>
+
+    <!-- Note header -->
+    <string name="header_saved">Saved</string>
+    <string name="header_saving">Saving…</string>
+    <string name="header_edited">Edited</string>
+    <string name="header_bookmark_page">Bookmark this page</string>
+    <string name="header_remove_bookmark">Remove bookmark</string>
+    <string name="header_search_note">Search in note</string>
+    <string name="header_page_setup">Page setup</string>
+    <string name="header_more">More</string>
+    <string name="header_pages">Pages</string>
+    <string name="header_page_of">%1$d / %2$d</string>
+
+    <!-- Toolbar ⋯ More tools -->
+    <string name="more_tools_footer">Tools you hide from the bar wait here. Choose them in Settings › Customise toolbar.</string>
+
+    <!-- Selection bar -->
+    <string name="sel_style">Style</string>
+    <string name="sel_arrange">Arrange</string>
+    <string name="sel_edit">Edit</string>
+    <string name="sel_note_colour">Colour</string>
+    <string name="sel_section_table">Table</string>
+    <string name="sel_table_add_row">Add row</string>
+    <string name="sel_table_add_column">Add column</string>
+    <string name="sel_table_header">Header row</string>
+
+    <!-- View, Go to page and Zoom cards -->
+    <string name="value_percent">%1$d%%</string>
+    <string name="view_rotate">Rotate</string>
+    <string name="view_degrees">%1$d°</string>
+    <string name="page_jump_of">/ %1$d</string>
+
+    <!-- Quick colours and the cards' colour dots, as TalkBack names them: the hue, then the dot's place in its row -->
+    <string name="ink_colour_of">%1$s, colour %2$d of %3$d</string>
+    <string name="ink_colour_starred">%1$s, starred colour</string>
+    <string name="ink_colour_change">Change colour</string>
+</resources>

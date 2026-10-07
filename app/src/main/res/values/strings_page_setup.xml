@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Page setup sheet (ui/PageSetupSheet.kt) -->
+    <string name="page_setup_title">Page setup</string>
+    <string name="page_setup_back">Back</string>
+    <!-- %1$s: the page's size and orientation, e.g. "A4 portrait" -->
+    <string name="page_setup_live_preview">Live preview · %1$s</string>
+    <!-- %1$s: a named page size ("A4"), %2$s: its orientation ("portrait") -->
+    <string name="page_setup_size_named">%1$s %2$s</string>
+    <!-- A page of no named size: width and height in millimetres -->
+    <string name="page_setup_size_mm">%1$s × %2$s mm</string>
+    <string name="page_setup_portrait">portrait</string>
+    <string name="page_setup_landscape">landscape</string>
+
+    <string name="page_setup_template">Template</string>
+    <!-- %1$d: how many templates there are to choose from -->
+    <string name="page_setup_browse_all">Browse all %1$d</string>
+    <string name="page_setup_all_templates">All templates</string>
+    <string name="page_setup_blank">Blank</string>
+
+    <string name="page_setup_paper_colour">Paper colour</string>
+    <string name="page_setup_line_colour">Line colour</string>
+    <string name="page_setup_accent_colour">Margin and accent colour</string>
+    <string name="page_setup_line_strength">Line strength</string>
+    <string name="page_setup_spacing">Spacing</string>
+    <!-- A value left at its default (the theme's paper, the template's own colour) -->
+    <string name="page_setup_default">Default</string>
+    <!-- A page-level value left unset, so the page shows the all-pages one -->
+    <string name="page_setup_as_all_pages">As all pages</string>
+    <string name="page_setup_custom">Custom</string>
+    <!-- %1$s: a length in millimetres -->
+    <string name="page_setup_mm">%1$s mm</string>
+    <!-- %1$d: a percentage -->
+    <string name="page_setup_percent">%1$d%%</string>
+
+
+    <string name="page_setup_apply_to">Apply to</string>
+    <string name="page_setup_this_page">This page</string>
+    <string name="page_setup_all_pages">All pages</string>
+
+    <string name="page_setup_save_default">Save as my default</string>
+    <string name="page_setup_saved_default">Saved as my default</string>
+    <string name="page_setup_import">Import template</string>
+
+    <!-- Template browser headings (ui/TemplateGroups.kt) -->
+    <string name="templates_basics">Basics</string>
+    <string name="templates_mine">My templates</string>
+    <string name="templates_in_note">In this note</string>
+    <string name="templates_writing">Writing &amp; study</string>
+    <string name="templates_planning">Planning</string>
+    <string name="templates_maths">Maths &amp; science</string>
+    <string name="templates_drawing">Drawing</string>
+    <string name="templates_music">Music</string>
+    <string name="templates_more">More</string>
+    <!-- Paper kit (ui/PaperKit.kt) -->
+    <string name="paper_white">White</string>
+    <string name="paper_cream">Cream</string>
+    <string name="paper_warm_grey">Warm grey</string>
+    <string name="paper_mint">Mint</string>
+    <string name="paper_dark">Dark</string>
+    <string name="paper_black">Black</string>
+    <string name="line_pale_blue">Pale blue</string>
+    <string name="line_rose">Rose</string>
+    <string name="line_sage">Sage</string>
+    <string name="accent_red">Red</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_ochre">Ochre</string>
+    <string name="page_setup_default_suffix">" (default)"</string>
+    <string name="page_setup_default_paren">(default)</string>
+    <string name="page_setup_custom_colour">Choose a custom colour</string>
+    <string name="page_setup_import_tile">Import</string>
+    <string name="page_setup_in_note">IN NOTE</string>
+    <string name="remove_template_b2">Remove from library</string>
+    <string name="remove_template_hint">Notes already using it keep their own copy.</string>
+    <string name="keep_template_b2">Add to library</string>
+    <string name="keep_template_hint">So your other notes can use it too.</string>
+    <string name="page_setup_size">Size</string>
+    <string name="page_setup_orientation">Orientation</string>
+    <!-- %1$s × %2$s: a custom page's width and height in millimetres -->
+    <string name="page_setup_custom_size_value">Custom · %1$s × %2$s mm</string>
+    <string name="page_setup_blank_desc">Plain paper in the paper colour.</string>
+    <string name="page_setup_builtin_desc">A built-in ruling, spaced in millimetres.</string>
+    <!-- %1$s: the note's title; %2$d of %3$d: the page shown -->
+    <string name="page_setup_sub">%1$s · page %2$d of %3$d</string>
+    <plurals name="page_setup_browse_sub_all">
+        <item quantity="one">%d template · tap one to use it on all pages</item>
+        <item quantity="other">%d templates · tap one to use it on all pages</item>
+    </plurals>
+    <plurals name="page_setup_browse_sub_page">
+        <item quantity="one">%d template · tap one to use it on this page</item>
+        <item quantity="other">%d templates · tap one to use it on this page</item>
+    </plurals>
+    <string name="page_setup_plus_margins">" + margins"</string>
+    <string name="page_setup_for_next">For the notes you create next</string>
+    <string name="page_setup_size_note_short">A note keeps the page size it was made with, so these never change this one.</string>
+    <string name="page_setup_as_all_pages_hint">as all pages</string>
+    <string name="page_setup_no_ruling">Blank paper has no ruling, so there is nothing else to set.</string>
+    <string name="page_setup_margins">Page margins</string>
+    <string name="page_setup_reset_margins">Reset margins</string>
+    <string name="page_setup_margins_note">Extra paper on any edge, measured against the page’s width (left, right) or height (top, bottom). It takes the paper colour and the ruling, and nothing already on the page moves.</string>
+    <string name="page_setup_edge">Edge</string>
+    <!-- %1$s: an edge ("Left"), %2$d: its margin in percent -->
+    <string name="page_setup_edge_value">%1$s · %2$d%%</string>
+    <string name="page_setup_live_hint">Changes apply as you make them</string>
+    <string name="page_setup_browse_hint">Long-press a template you imported to remove it, or one this note carries to keep it.</string>
+</resources>

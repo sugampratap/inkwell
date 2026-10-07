@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Selection pill / More menu -->
+    <string name="sel_crop">Crop</string>
+    <string name="sel_rotate">Rotate</string>
+    <string name="sel_flip">Flip</string>
+    <string name="rotate_left">Rotate left</string>
+    <string name="rotate_right">Rotate right</string>
+    <string name="flip_horizontal">Flip horizontally</string>
+    <string name="flip_vertical">Flip vertically</string>
+    <string name="bring_forward">Bring forward</string>
+    <string name="send_backward">Send backward</string>
+    <string name="sel_send_to_back">Send to back</string>
+    <string name="sel_share">Share as image</string>
+    <string name="save_as_image">Save as image</string>
+    <string name="replace_image">Replace image</string>
+    <string name="save_image">Save image</string>
+    <string name="reset_image">Reset image</string>
+    <string name="sel_select_all">Select all</string>
+    <string name="sel_section_arrange">Arrange</string>
+    <string name="sel_section_image">Image</string>
+
+    <!-- Crop mode -->
+    <string name="crop_free">Free</string>
+    <string name="crop_square">1:1</string>
+    <string name="crop_4_3">4:3</string>
+    <string name="crop_3_4">3:4</string>
+    <string name="crop_16_9">16:9</string>
+    <string name="crop_original">Original</string>
+    <string name="crop_reset">Reset</string>
+    <string name="crop_done">Done</string>
+    <string name="crop_cancel">Cancel</string>
+
+    <!-- Results -->
+    <string name="selection_copied_image">Copied as an image. Paste it anywhere.</string>
+    <string name="selection_saved_image">Saved as an image.</string>
+    <string name="image_saved">Image saved.</string>
+    <string name="err_share_selection">Couldn’t share the selection.</string>
+    <string name="err_replace_image">Couldn’t replace the image with that file.</string>
+    <string name="share_selection_title">Share selection</string>
+
+    <!-- Lasso options -->
+    <string name="lasso_options">Lasso</string>
+    <string name="lasso_shape">Selection shape</string>
+    <string name="lasso_freeform">Freeform</string>
+    <string name="lasso_rectangle">Rectangle</string>
+    <string name="lasso_select">Select</string>
+    <string name="lasso_filter_all">Everything</string>
+    <string name="lasso_filter_handwriting">Handwriting</string>
+    <string name="lasso_filter_images">Images</string>
+    <string name="lasso_filter_text">Text and sticky notes</string>
+    <string name="lasso_filter_shapes">Shapes and tape</string>
+    <string name="lasso_tap_select">Tap to select an object</string>
+    <string name="lasso_tap_select_hint">A tap with the lasso picks the object under it.</string>
+</resources>

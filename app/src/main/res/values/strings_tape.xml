@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The tape tool: study tape that hides what it covers until tapped (GoodNotes / Starnote "Tape"). -->
+    <string name="tool_tape">Tape</string>
+    <string name="tape_hint">Pull a strip over anything to hide it. Tap the tape to reveal what\'s under it, and tap again to cover it.</string>
+    <string name="tape_colour">Colour</string>
+    <string name="tape_pattern">Pattern</string>
+    <string name="tape_width">Width</string>
+    <string name="tape_pattern_solid">Plain</string>
+    <string name="tape_pattern_stripes">Stripes</string>
+    <string name="tape_pattern_dots">Dots</string>
+    <string name="tape_pattern_grid">Gingham</string>
+    <string name="tape_reveal_all">Reveal all</string>
+    <string name="tape_hide_all">Hide all</string>
+    <string name="tape_none">No tape in this note yet</string>
+    <string name="tape_preview">Tape preview</string>
+</resources>

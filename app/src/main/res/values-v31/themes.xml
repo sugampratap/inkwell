@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- On Android 12+, theme the system splash to the loader's paper stage and
+         suppress the launcher icon so the loader carries the launch. The base splash is light;
+         MainActivity names the Dark or OLED one for the next launch (Android 13+), with bars to match. -->
+    <style name="Theme.Xnotes.Splash" parent="Theme.Xnotes">
+        <item name="android:windowBackground">@color/loader_bg</item>
+        <item name="android:windowSplashScreenBackground">@color/loader_bg</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_blank</item>
+    </style>
+    <style name="Theme.Xnotes.Splash.Light">
+        <item name="android:windowBackground">@color/launch_light</item>
+        <item name="android:windowSplashScreenBackground">@color/launch_light</item>
+        <item name="android:statusBarColor">@color/launch_light</item>
+        <item name="android:navigationBarColor">@color/launch_light</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+    <style name="Theme.Xnotes.Splash.Dark">
+        <item name="android:windowBackground">@color/launch_dark</item>
+        <item name="android:windowSplashScreenBackground">@color/launch_dark</item>
+        <item name="android:statusBarColor">@color/launch_dark</item>
+        <item name="android:navigationBarColor">@color/launch_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+    <style name="Theme.Xnotes.Splash.Oled">
+        <item name="android:windowBackground">@color/launch_oled</item>
+        <item name="android:windowSplashScreenBackground">@color/launch_oled</item>
+        <item name="android:statusBarColor">@color/launch_oled</item>
+        <item name="android:navigationBarColor">@color/launch_oled</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+    </style>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Long-press (context) menu on the page -->
+    <string name="lp_paste">Paste</string>
+    <string name="lp_paste_image">Paste image</string>
+    <string name="lp_sticky_note">Sticky note</string>
+    <string name="lp_text_box">Text box</string>
+    <string name="lp_image">Image</string>
+    <string name="lp_table">Table</string>
+    <string name="lp_select_all">Select all</string>
+    <string name="lp_share_page">Share page as image</string>
+    <string name="lp_copy_page">Copy page as image</string>
+    <string name="lp_unlock">Unlock</string>
+
+    <!-- Sticky notes -->
+    <string name="stickynote_color">Note colour</string>
+
+    <!-- Placed tables -->
+    <string name="ptable_insert_title">Insert table</string>
+    <string name="ptable_insert_hint">Tap or drag across the grid to choose rows and columns.</string>
+    <string name="ptable_insert_action">Insert</string>
+    <string name="ptable_insert">Insert</string>
+    <string name="ptable_row_above">Row above</string>
+    <string name="ptable_row_below">Row below</string>
+    <string name="ptable_column_left">Column left</string>
+    <string name="ptable_column_right">Column right</string>
+    <string name="ptable_delete">Delete</string>
+    <string name="ptable_delete_row">Delete row</string>
+    <string name="ptable_delete_column">Delete column</string>
+    <string name="ptable_delete_table">Delete table</string>
+    <string name="ptable_header_row">Header</string>
+    <string name="ptable_cell_colour">Cell colour</string>
+    <string name="ptable_no_colour">No colour</string>
+    <string name="ptable_done">Done</string>
+</resources>

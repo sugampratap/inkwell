@@ -1,0 +1,9 @@
+- A new look across the app: library, editor, tool cards, menus and Settings
+- Textured pencil that darkens as you press
+- Faster highlighter and lasso on the infinite canvas; drag a line's ends anywhere
+- New selection bar; pick its buttons in Settings
+- Palm rejection, and zoom lock on the toolbar
+- Eyedropper in the colour picker; playback speed for recordings
+- Drag pages to reorder in the pages panel
+- About 7 MB smaller
+- Minor fixes and improvements

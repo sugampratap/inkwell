@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The pages side panel (ui/SidePanel.kt) and Find in note (ui/SearchTab.kt). -->
+<resources>
+    <plurals name="panel_pages">
+        <item quantity="one">%d page</item>
+        <item quantity="other">%d pages</item>
+    </plurals>
+    <plurals name="panel_selected">
+        <item quantity="one">%d selected</item>
+        <item quantity="other">%d selected</item>
+    </plurals>
+    <string name="panel_select">Select</string>
+    <string name="panel_add">Add</string>
+    <plurals name="panel_bookmarks">
+        <item quantity="one">%d bookmark</item>
+        <item quantity="other">%d bookmarks</item>
+    </plurals>
+    <string name="page_options_n">Options for page %1$d</string>
+    <string name="page_menu_add_before">Add page before</string>
+    <string name="page_menu_add_after">Add page after</string>
+    <string name="page_move_earlier">Move page earlier</string>
+    <string name="page_move_later">Move page later</string>
+    <string name="page_menu_paste_after">Paste after</string>
+    <string name="page_menu_delete">Delete page</string>
+    <string name="page_menu_share_as">Share as</string>
+    <string name="page_menu_save_as">Save as</string>
+    <string name="page_menu_image">Image</string>
+    <string name="panel_save_as">Save as</string>
+    <plurals name="panel_share_n_as">
+        <item quantity="one">Share %d page as</item>
+        <item quantity="other">Share %d pages as</item>
+    </plurals>
+    <plurals name="panel_save_n_as">
+        <item quantity="one">Save %d page as</item>
+        <item quantity="other">Save %d pages as</item>
+    </plurals>
+    <string name="panel_no_bookmarks_title">No bookmarks yet</string>
+    <string name="panel_no_bookmarks_body">Tap Add, or the bookmark button at the top of the note.</string>
+    <string name="panel_no_contents_title">No contents</string>
+    <string name="panel_no_contents_body">A PDF’s own table of contents shows here. Notes without one have none.</string>
+    <string name="bookmark_name">Bookmark name</string>
+    <string name="remove_bookmark">Remove bookmark</string>
+    <string name="search_matches_label">matches</string>
+    <string name="search_empty_title">Find in this note</string>
+    <string name="search_empty_body">Searches typed text, text boxes and PDF text. Handwriting isn’t searched.</string>
+    <string name="search_none_body">Searched typed text, text boxes and PDF text.</string>
+</resources>

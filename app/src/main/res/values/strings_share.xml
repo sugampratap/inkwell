@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="share_pdf">PDF</string>
+    <string name="share_pdf_hint">Small, and looks the same everywhere. The ink can\'t be changed.</string>
+    <string name="share_editable_pdf">Editable PDF</string>
+    <string name="share_editable_pdf_hint">Ink stays editable in PDF apps, and Inkwell reopens it as this note.</string>
+    <string name="share_note_file">Inkwell note</string>
+    <string name="share_note_file_hint">The whole note, for Inkwell on another device.</string>
+    <string name="share_canvas_file_hint">The whole canvas, for Inkwell on another device.</string>
+    <string name="share_images">Images</string>
+    <string name="caption_favourite_colours">Favourites</string>
+    <string name="favourite_colour_add">Add to favourites</string>
+    <string name="favourite_colour_remove">Favourite</string>
+    <string name="favourite_colours_empty">Tap the heart to keep a colour here for later.</string>
+    <string name="share_pages_label">Pages</string>
+    <string name="share_format_label">Format</string>
+    <plurals name="share_all_n_pages">
+        <item quantity="one">All %d page</item>
+        <item quantity="other">All %d pages</item>
+    </plurals>
+    <string name="share_page_only">Page %1$d only</string>
+    <string name="share_canvas_file">Inkwell canvas</string>
+    <string name="share_image">Image</string>
+    <string name="share_image_hint_one">This page as a picture (PNG).</string>
+    <string name="share_images_hint_png">Each page as a picture (PNG).</string>
+    <string name="share_note_whole_only">Always the whole note — choose All pages to send it.</string>
+    <string name="share_pdf_options">PDF options</string>
+    <string name="share_headings_desc">Each heading in the note becomes a bookmark in the PDF. Same switch as Settings › Export &amp; sharing.</string>
+    <string name="share_go_pdf">Share PDF</string>
+    <string name="share_go_editable">Share editable PDF</string>
+    <string name="share_go_note">Share note</string>
+    <string name="share_go_canvas">Share canvas</string>
+    <string name="share_go_image">Share image</string>
+    <plurals name="share_go_images">
+        <item quantity="one">Share %d image</item>
+        <item quantity="other">Share %d images</item>
+    </plurals>
+    <!-- From the library, where the page count is not known -->
+    <string name="share_go_images_any">Share images</string>
+    <string name="share_save_pdf">Save PDF…</string>
+    <string name="share_save_image">Save image…</string>
+    <string name="share_save_images">Save images…</string>
+    <plurals name="share_n_pages">
+        <item quantity="one">%d page</item>
+        <item quantity="other">%d pages</item>
+    </plurals>
+    <string name="share_summary_canvas">Whole canvas</string>
+    <!-- %1$s: what goes ("12 pages", "Page 7"), %2$s: as what ("PDF") -->
+    <string name="share_summary">%1$s · %2$s</string>
+</resources>

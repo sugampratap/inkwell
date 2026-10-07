@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kit_close">Close</string>
+    <string name="kit_decrease">Decrease</string>
+    <string name="kit_increase">Increase</string>
+    <string name="kit_clear">Clear</string>
+    <string name="kit_more_options">More options</string>
+    <string name="kit_fewer_options">Fewer options</string>
+</resources>

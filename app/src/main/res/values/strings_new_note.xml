@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The New notebook sheet (ui/NewNotebookSheet.kt): the paper a note is made on, chosen before it is made. -->
+<resources>
+    <string name="new_notebook_title">New notebook</string>
+    <string name="new_notebook_back">Back</string>
+    <string name="new_notebook_name">Name</string>
+
+    <string name="new_notebook_template">Template</string>
+    <!-- %1$d: how many templates there are to choose from -->
+    <string name="new_notebook_browse_all">Browse all %1$d</string>
+    <string name="new_notebook_all_templates">All templates</string>
+
+    <string name="new_notebook_paper">Paper colour</string>
+    <string name="new_notebook_lines">Line colour</string>
+    <string name="new_notebook_accent">Margin and accent colour</string>
+    <!-- A value left at its default (the theme's paper, the template's own colour) -->
+    <string name="new_notebook_default">Default</string>
+    <!-- %1$s: a length in millimetres -->
+
+    <string name="new_notebook_portrait_title">Portrait</string>
+    <string name="new_notebook_landscape_title">Landscape</string>
+    <!-- %1$s: a named page size ("A4"), %2$s: its orientation ("portrait") -->
+    <!-- A page of no named size: width and height in millimetres -->
+
+    <string name="new_notebook_cover">Cover colour</string>
+
+    <string name="new_notebook_remembered">Your next notebook starts from these choices too.</string>
+    <string name="new_notebook_cancel">Cancel</string>
+    <string name="new_notebook_create">Create</string>
+
+    <!-- %1$s: the folder the notebook is made in -->
+    <string name="new_notebook_in_folder">In %1$s</string>
+    <string name="new_notebook_on_shelf">On the shelf</string>
+    <!-- %1$s: "A4 portrait", or a custom size in mm -->
+    <string name="new_notebook_first_page">First page · %1$s</string>
+    <string name="new_notebook_page_size">Page size</string>
+    <!-- %1$s: the colour Automatic picks ("Sage") -->
+    <string name="new_notebook_cover_auto_named">Automatic · %1$s</string>
+    <string name="new_notebook_cover_hint">Automatic takes its colour from the name, so it changes as you type.</string>
+    <!-- %1$s: the name a blank notebook gets ("untitled_3") -->
+    <string name="new_notebook_blank_hint">Leave it blank to call it %1$s.</string>
+    <string name="new_notebook_enter_hint">" creates it, "</string>
+    <string name="new_notebook_esc_hint">" closes."</string>
+    <string name="new_notebook_key_enter">Enter</string>
+    <string name="new_notebook_key_esc">Esc</string>
+    <string name="new_notebook_browse_hint">Tap a template to pick it and go back.</string>
+    <plurals name="new_notebook_browse_sub">
+        <item quantity="one">%d template · tap one to pick it</item>
+        <item quantity="other">%d templates · tap one to pick it</item>
+    </plurals>
+    <!-- The cover cloths, in CoverPalette.colors' order (the B2 set's sage and terracotta reuse the names) -->
+    <string name="cover_petrol">Petrol</string>
+    <string name="cover_sand">Sand</string>
+    <string name="cover_sage">Sage</string>
+    <string name="cover_plum">Plum</string>
+    <string name="cover_denim">Denim</string>
+    <string name="cover_oat">Oat</string>
+    <string name="cover_slate">Slate</string>
+    <string name="cover_terracotta">Terracotta</string>
+    <string name="cover_forest">Forest</string>
+    <string name="cover_heather">Heather</string>
+    <string name="cover_navy">Navy</string>
+    <string name="cover_teal">Teal</string>
+    <string name="cover_mustard">Mustard</string>
+    <string name="cover_blush">Blush</string>
+</resources>

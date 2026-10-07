@@ -1,0 +1,294 @@
+package com.xnotes.core.infinite
+
+import com.xnotes.canvas.HandleId
+import com.xnotes.canvas.ResizeHandle
+import com.xnotes.canvas.ResizeMath
+import com.xnotes.core.geometry.Affine
+import com.xnotes.core.geometry.Obb
+import com.xnotes.core.geometry.Pt
+import com.xnotes.core.geometry.Rect
+import com.xnotes.core.history.Command
+import com.xnotes.core.history.MoveItems
+import com.xnotes.core.history.TransformItems
+import com.xnotes.core.model.CanvasItem
+import com.xnotes.core.model.GeometrySnapshot
+import com.xnotes.core.model.ShapeItem
+
+/**
+ * What is selected on the canvas, and the arithmetic of moving, scaling and rotating it.
+ *
+ * A live drag restores each item's gesture-start geometry and re-applies the whole transform every
+ * frame, rather than applying an incremental one. That is what keeps a drag from compounding
+ * rounding error, and it is what lets a rotation be undone as a single step.
+ *
+ * The box is oriented rather than axis-aligned, so a selection that has been turned keeps its own
+ * frame and its handles scale along its own axes. Both come from [ResizeMath], shared with the
+ * paged canvas, so a resize behaves the same on either surface.
+ *
+ * Pure Kotlin: no view, no renderer, so all of it unit-tests.
+ */
+class CanvasSelection(private val doc: InfiniteDocument) {
+
+    var items: List<CanvasItem> = emptyList()
+        private set
+
+    /** The oriented box around the selection, or null when nothing is selected. */
+    var box: Obb? = null
+        private set
+
+    val isEmpty: Boolean get() = items.isEmpty()
+
+    /** Gesture-start geometry, captured by [beginTransform] and restored every frame of a drag. */
+    private var startSnapshots: List<GeometrySnapshot> = emptyList()
+    private var startBox: Obb? = null
+
+    /** Where the finger came down, as an angle about the box's centre. Null when it was not given. */
+    private var startGrabAngle: Double? = null
+
+    fun select(next: List<CanvasItem>) {
+        items = next
+        box = boundsOf(next)?.let { Obb.fromAabb(it) }
+    }
+
+    fun clear() {
+        items = emptyList()
+        box = null
+        startSnapshots = emptyList()
+        startBox = null
+        startGrabAngle = null
+    }
+
+    /**
+     * Re-derive the box from the items, after something outside a drag changed them.
+     *
+     * The box comes back upright, because item bounds are axis aligned and cannot say what angle
+     * the content is at. Keeping the old angle and tilting the fresh bounds was worse than useless:
+     * every rotation grew the box by its own turn, so a selection ballooned and skewed the moment
+     * the finger came off the grip.
+     */
+    fun refreshBox() {
+        box = boundsOf(items)?.let { Obb.fromAabb(it) }
+    }
+
+    /**
+     * Put the box at [b] after an edit that knows the selection's true frame better than the item
+     * bounds do: a quarter turn of a turned selection, or a picture's own tilted rect.
+     */
+    fun setBox(b: Obb) {
+        if (items.isNotEmpty()) box = b
+    }
+
+    /** True when [p] is inside the selection, so a press there grabs it rather than starting a band. */
+    fun contains(p: Pt): Boolean = box?.contains(p) == true
+
+    /**
+     * The single selected line or arrow, whose two ends are its own handles, or null. Any other
+     * selection, one item or many, takes the box's handles. The paged canvas draws the same line.
+     */
+    fun endpointShape(): ShapeItem? {
+        val item = items.singleOrNull() as? ShapeItem ?: return null
+        return if (item.shape.isEndpointShape) item else null
+    }
+
+    /**
+     * The resize handles, in content space: a lone line's or arrow's two ends, else the box's eight.
+     *
+     * A line's box is a stroke-width thick, so its corner handles sit right on its ends, and a
+     * corner scales along the box's diagonal, which for a line is the line itself: its end could
+     * only slide along its own direction. Its ends are what it is drawn by, so they are the handles.
+     */
+    fun handles(): List<ResizeHandle> {
+        endpointShape()?.let { return endpointHandles(it) }
+        return box?.let { ResizeMath.obbHandles(it) } ?: emptyList()
+    }
+
+    /**
+     * [line]'s two ends, carried along with the box while a move is previewed: the model stays put
+     * until the finger lifts, and the box alone shows where it is going.
+     */
+    private fun endpointHandles(line: ShapeItem): List<ResizeHandle> {
+        val b = box ?: return emptyList()
+        val at = line.bounds()
+        val dx = b.center.x - at.centerX
+        val dy = b.center.y - at.centerY
+        return listOf(
+            ResizeHandle(HandleId.START, Pt(line.start.x + dx, line.start.y + dy)),
+            ResizeHandle(HandleId.END, Pt(line.end.x + dx, line.end.y + dy)),
+        )
+    }
+
+    /**
+     * The rotate grip's centre, [arm] content pixels past the box's top edge, or null for a lone
+     * line or arrow: it is turned by dragging one of its ends, as on a note.
+     */
+    fun rotateGrip(arm: Double): Pt? {
+        if (endpointShape() != null) return null
+        return box?.let { ResizeMath.obbRotateGrip(it, arm) }
+    }
+
+    /** Which handle [p] lands on, within [tolerance] content pixels, or null. */
+    fun hitHandle(p: Pt, tolerance: Double): HandleId? =
+        ResizeMath.hitHandle(handles(), p, tolerance)
+
+    // --- transforms ---
+
+    /**
+     * Capture the state a drag will be measured against. Call once, at pointer down. [grabAt] is
+     * where the finger actually landed, which a rotation needs: it turns by the angle swept from
+     * there, so a press a few pixels off the grip's centre no longer snaps the selection.
+     */
+    fun beginTransform(grabAt: Pt? = null) {
+        startSnapshots = items.map { it.snapshotGeometry() }
+        startBox = box
+        val centre = box?.center
+        startGrabAngle = if (grabAt == null || centre == null) null
+        else kotlin.math.atan2(grabAt.y - centre.y, grabAt.x - centre.x)
+    }
+
+    /**
+     * Put every item back where the drag began and bake [transform] over it. Called per frame, so
+     * the drag is always one transform of the original rather than a chain of small ones.
+     */
+    fun applyLive(transform: Affine) {
+        for (i in items.indices) items[i].restoreGeometry(startSnapshots[i])
+        for (item in items) item.applyTransform(transform)
+        doc.itemsChanged(items)
+    }
+
+    /**
+     * Move the box alone, for a drag the renderer is offsetting rather than the model.
+     *
+     * A drag used to move the items themselves on every touch sample, which meant re-tessellating
+     * and re-uploading every selected item several times a frame. The model now stays put until the
+     * finger lifts, and [moveLive] applies the whole move once.
+     */
+    fun previewMove(dx: Double, dy: Double) {
+        startBox?.let { box = it.translate(dx, dy) }
+    }
+
+    /** Move by a delta from the gesture start, restoring first so the drag cannot compound. */
+    fun moveLive(dx: Double, dy: Double) {
+        for (i in items.indices) items[i].restoreGeometry(startSnapshots[i])
+        for (item in items) item.translate(dx, dy)
+        startBox?.let { box = it.translate(dx, dy) }
+        doc.itemsChanged(items)
+    }
+
+    /** True when an edge handle must scale the whole selection: a picture is never stretched. */
+    private val keepsAspect: Boolean get() = items.any { it is com.xnotes.core.model.ImageItem }
+
+    /** Scale a handle drag in the box's own frame, anchored at the opposite handle. */
+    fun resizeLive(handle: HandleId, pointer: Pt) {
+        if (handle == HandleId.START || handle == HandleId.END) return moveEndpoint(handle, pointer)
+        val from = startBox ?: return
+        val result = ResizeMath.obbResize(from, handle, pointer, uniformEdges = keepsAspect)
+        box = result.obb
+        applyLive(result.transform)
+    }
+
+    /**
+     * Put one end of the lone line or arrow at [pointer], anywhere, and leave the other where the
+     * drag began, as the paged canvas does. Restored first, like every live drag, so it cannot
+     * compound; the box is re-derived from the line, since an end can swing it round to any angle.
+     * Undo comes from the snapshots [beginTransform] took, through [buildCommand].
+     */
+    fun moveEndpoint(handle: HandleId, pointer: Pt) {
+        val line = endpointShape() ?: return
+        if (startSnapshots.size != 1) return
+        line.restoreGeometry(startSnapshots[0])
+        val (s, e) = ResizeMath.resizeOpenShape(line.start, line.end, handle, pointer)
+        line.setGeometry(com.xnotes.core.model.ShapeHandle(s, e))
+        doc.itemsChanged(items)
+        box = boundsOf(items)?.let { Obb.fromAabb(it) }
+    }
+
+    /**
+     * Undo a drag the model was edited live for, which a cancelled gesture needs: everything goes
+     * back to its gesture-start geometry and the box with it.
+     */
+    fun restoreStart() {
+        if (startSnapshots.size != items.size) return
+        for (i in items.indices) items[i].restoreGeometry(startSnapshots[i])
+        doc.itemsChanged(items)
+        startBox?.let { box = it }
+    }
+
+    /**
+     * Scale the box alone and report the map, for a drag the renderer is scaling rather than the
+     * model. The counterpart of [previewMove] and [previewRotate].
+     */
+    fun previewResize(handle: HandleId, pointer: Pt): Affine? {
+        // An end is not a scale of anything: [moveEndpoint] edits the line itself.
+        if (handle == HandleId.START || handle == HandleId.END) return null
+        val from = startBox ?: return null
+        val result = ResizeMath.obbResize(from, handle, pointer, uniformEdges = keepsAspect)
+        box = result.obb
+        return result.transform
+    }
+
+    /**
+     * Turn the selection about its own centre by the angle the pointer has swept since the grab.
+     *
+     * Swept, not absolute: pointing the box's local up straight at the pointer means a press that
+     * lands anywhere but the grip's exact centre jerks the selection round before the finger has
+     * moved, and the grip is a 22 device pixel target 34 pixels out from the box.
+     */
+    fun rotateLive(pointer: Pt) {
+        val from = startBox ?: return
+        val swept = sweptAngle(from, pointer)
+        box = from.copy(angle = from.angle + swept)
+        applyLive(Affine.rotateAbout(from.center, swept))
+    }
+
+    /**
+     * Turn the box alone and report the angle, for a drag the renderer is turning rather than the
+     * model. The counterpart of [previewMove]: the model stays put until the finger lifts, and
+     * [rotateLive] then applies the whole turn once.
+     */
+    fun previewRotate(pointer: Pt): Double {
+        val from = startBox ?: return 0.0
+        val swept = sweptAngle(from, pointer)
+        box = from.copy(angle = from.angle + swept)
+        return swept
+    }
+
+    /** Put the box back where the drag started, for a gesture that was cancelled rather than ended. */
+    fun previewBack() {
+        startBox?.let { box = it }
+    }
+
+    /** The point a transform turns and scales about: the box as it was when the gesture began. */
+    val transformPivot: Pt? get() = startBox?.center
+
+    private fun sweptAngle(from: Obb, pointer: Pt): Double {
+        val centre = from.center
+        // Without a recorded grab, fall back to the grip's own direction, which is the box's local
+        // up: that reduces to pointing up at the pointer.
+        val grab = startGrabAngle ?: (from.angle - Math.PI / 2.0)
+        return kotlin.math.atan2(pointer.y - centre.y, pointer.x - centre.x) - grab
+    }
+
+    /**
+     * The undoable edit for the drag just finished, or null when nothing actually moved. A move is
+     * recorded as a move so it stays cheap; anything that changed shape is recorded as before and
+     * after geometry snapshots, because a rotation can change a shape's very kind.
+     */
+    fun buildCommand(movedOnly: Boolean, dx: Double = 0.0, dy: Double = 0.0): Command? {
+        if (items.isEmpty()) return null
+        if (movedOnly) {
+            if (dx == 0.0 && dy == 0.0) return null
+            return OnCanvas(doc, MoveItems(items, dx, dy), items)
+        }
+        val after = items.map { it.snapshotGeometry() }
+        return OnCanvas(doc, TransformItems(items, startSnapshots, after), items)
+    }
+
+    private fun boundsOf(of: List<CanvasItem>): Rect? {
+        var acc: Rect? = null
+        for (item in of) {
+            val b = item.bounds()
+            acc = acc?.union(b) ?: b
+        }
+        return acc
+    }
+}

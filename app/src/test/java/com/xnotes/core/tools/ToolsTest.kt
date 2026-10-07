@@ -1,0 +1,95 @@
+package com.xnotes.core.tools
+
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class ToolsTest {
+
+    @Test fun theMarkupToolHighlightsAtHalfAndPansAFreeFinger() {
+        val c = ToolDefaults.configFor(Tool.MARKUP)
+        assertEquals(MarkupMode.HIGHLIGHT, c.markupMode)
+        assertEquals(0.5, c.markupIntensity, 1e-9)
+        assertTrue(Tool.MARKUP.fingerPansWhenOff)
+        assertFalse(Tool.MARKUP.isStroke)
+        assertTrue(Tool.MARKUP in Tool.wheelOrder && Tool.MARKUP in ToolDefaults.persistedTools)
+        assertEquals(MarkupMode.HIGHLIGHT, MarkupMode.fromId("nonsense"))
+        assertEquals(null, MarkupMode.SELECT.type)
+        assertEquals(com.xnotes.core.model.MarkupType.SQUIGGLY, MarkupMode.SQUIGGLY.type)
+    }
+
+    @Test fun factoryDefaultsMatchSpec() {
+        assertEquals(ToolConfig(3.0, true, 0.35, 0.0), ToolDefaults.configFor(Tool.PEN).copy(rgba = ToolConfig().rgba))
+        val cal = ToolDefaults.configFor(Tool.CALLIGRAPHY)
+        assertEquals(6.0, cal.baseWidth, 1e-9)
+        assertTrue(cal.pressureEnabled)
+        assertEquals(0.40, cal.pressureMinFactor, 1e-9)
+        assertEquals(0.60, cal.directionStrength, 1e-9)
+        val hi = ToolDefaults.configFor(Tool.HIGHLIGHTER)
+        assertEquals(16.0, hi.baseWidth, 1e-9)
+        assertFalse(hi.pressureEnabled)
+        assertEquals(24.0, ToolDefaults.configFor(Tool.ERASER).baseWidth, 1e-9)
+        assertEquals(2.0, ToolDefaults.configFor(Tool.LASSO).baseWidth, 1e-9)
+        // A tool without an entry uses ToolConfig() = (3.0, on, 0.35, 0.0).
+        assertEquals(ToolConfig().copy(rgba = ToolDefaults.configFor(Tool.PAN).rgba), ToolDefaults.configFor(Tool.PAN))
+    }
+
+    @Test fun sensitivityRoundTrip() {
+        assertEquals(1.0, ToolConversions.sensitivityToMinFactor(0.0), 1e-9)
+        assertEquals(0.1, ToolConversions.sensitivityToMinFactor(100.0), 1e-9)
+        assertEquals(0.55, ToolConversions.sensitivityToMinFactor(50.0), 1e-9)
+        // inverse
+        assertEquals(50.0, ToolConversions.minFactorToSensitivity(0.55), 1e-9)
+        assertEquals(0.0, ToolConversions.minFactorToSensitivity(1.0), 1e-9)
+    }
+
+    @Test fun multiplierRoundTrip() {
+        // M = 4.0  <->  ds = 0.60 (calligraphy default)
+        assertEquals(0.60, ToolConversions.multiplierToDirectionStrength(4.0), 1e-9)
+        assertEquals(4.0, ToolConversions.directionStrengthToMultiplier(0.60), 1e-9)
+        // clamp at 0.95
+        assertEquals(0.95, ToolConversions.multiplierToDirectionStrength(1000.0), 1e-9)
+        assertEquals(0.0, ToolConversions.multiplierToDirectionStrength(1.0), 1e-9)
+    }
+
+    @Test fun widthRanges() {
+        assertEquals(4.0..40.0, ToolConversions.widthRange(Tool.HIGHLIGHTER))
+        assertEquals(1.0..20.0, ToolConversions.widthRange(Tool.PEN))
+    }
+
+    @Test fun strokeToolsAndAlpha() {
+        assertTrue(Tool.CALLIGRAPHY.isStroke)
+        assertTrue(Tool.DASHED.isStroke)
+        assertFalse(Tool.SELECT.isStroke)
+        assertEquals(0.35, Tool.HIGHLIGHTER.alphaScale, 1e-9)
+        assertEquals(1.0, Tool.PEN.alphaScale, 1e-9)
+        assertEquals(Tool.PEN, Tool.DEFAULT)
+    }
+
+    @Test fun shapeKinds() {
+        assertTrue(ShapeKind.RECTANGLE.isClosed)
+        assertTrue(ShapeKind.LINE.isOpen)
+        assertTrue(ShapeKind.ARROW.isOpen)
+        assertEquals(ShapeKind.RECTANGLE, ShapeKind.fromId("nonsense"))
+        assertEquals(ShapeKind.TRIANGLE, ShapeKind.fromId("triangle"))
+    }
+
+    @Test fun toolIdRoundTrip() {
+        for (t in Tool.entries) assertEquals(t, Tool.fromId(t.id))
+        // 17, + the pencil, which has to be in it for the pencil in hand to come back at launch.
+        assertEquals(18, Tool.wheelOrder.size)
+        assertTrue(Tool.PENCIL in Tool.wheelOrder && Tool.SPEED in Tool.wheelOrder)
+        assertTrue(Tool.TAPE in Tool.wheelOrder)
+    }
+
+    @Test fun penTypesAreThePensAndTheLaserIsKeptOutOfTheBox() {
+        assertTrue(Tool.penTypes.all { it.isPen })
+        // The grid is every pen bar the Quill, which the pencil replaced there and which stays a pen.
+        assertEquals(Tool.entries.filter { it.isPen }.toSet(), Tool.allPenTypes.toSet())
+        assertEquals(Tool.allPenTypes.toSet() - Tool.SPEED, Tool.penTypes.toSet())
+        assertTrue(Tool.LASER.isStroke && Tool.LASER.isEphemeral && !Tool.LASER.isPen)
+        assertFalse(PenBox.holds(Tool.LASER))
+        assertTrue(ToolDefaults.configFor(Tool.LASER).neon)
+    }
+}

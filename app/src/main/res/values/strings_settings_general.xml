@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings › General and Customise toolbar (ui/SettingsGeneral.kt, ui/ToolbarCustomizer.kt). -->
+<resources>
+    <string name="settings_look_style">Style</string>
+    <string name="settings_look_position">Position</string>
+    <string name="settings_look_size">Button size</string>
+    <string name="settings_look_caption">The notebook and canvas bars both follow this.</string>
+    <string name="settings_customise_toolbar_sub">Choose, order and group the tools on the notebook and canvas bars</string>
+    <string name="settings_filename_help_b2">YYYY YY MM DD HH mm ss become the creation date and time. # becomes the number that keeps the name free in its folder.</string>
+    <!-- Followed, in bold, by the name the next note would get. -->
+    <string name="settings_next_note_named">"The next note would be named "</string>
+    <string name="customise_sub">Choose, order and group the tools on each bar</string>
+    <string name="customise_sections">Sections</string>
+    <string name="customise_help">Tap a tool to show or hide it. Hold and drag to move it, within a section or into another. Drag a section by its handle.</string>
+    <string name="customise_section_n">Section %1$d</string>
+    <!-- %1$d of %2$d: tools shown of tools in the section -->
+    <string name="customise_section_shown">%1$d of %2$d shown</string>
+    <string name="customise_section_empty">empty</string>
+    <string name="customise_reset">Reset to default</string>
+    <string name="customise_preview_note">Live preview of the notebook bar. PDF text markup appears only on notes with a PDF; hidden tools stay one tap away in More tools.</string>
+    <string name="customise_preview_canvas">Live preview of the canvas bar. Hidden tools stay one tap away in More tools.</string>
+    <string name="customise_preview_empty">The bar is empty — every tool waits in More tools</string>
+    <string name="customise_shown_tap">Shown · tap to hide</string>
+    <string name="customise_hidden_tap">Hidden · tap to show</string>
+
+    <!-- Settings › General › Selection bar (ui/SelectionBarSettings.kt) -->
+    <string name="settings_selection_bar">Selection bar</string>
+    <string name="settings_selection_bar_desc">Choose the actions on the bar over a selection; the rest wait in More</string>
+    <string name="settings_selection_bar_sub">Choose the actions on the bar over a selection</string>
+    <string name="selbar_sub">Turn an action on to keep it on the bar. Everything else waits in More.</string>
+    <string name="selbar_kind_ink">Handwriting</string>
+    <string name="selbar_kind_picture">Picture</string>
+    <string name="selbar_kind_note">Sticky note</string>
+    <string name="selbar_kind_text_box">Text box</string>
+    <string name="selbar_kind_table">Table</string>
+    <string name="selbar_preview_hint">Live preview. Each selection shows only the actions that work on it, in this order, grouped as here.</string>
+    <string name="selbar_preview_empty">Nothing on the bar: every action waits in More</string>
+    <!-- %1$d: the most actions the bar holds for one selection -->
+    <string name="selbar_limit">The bar holds up to %1$d actions for any one selection. On a narrow screen it keeps what fits and moves the rest to More.</string>
+    <string name="selbar_full">The bar is full for some selections. Turn another action off first.</string>
+    <string name="selbar_group_lead">Style and edit</string>
+    <string name="selbar_group_table">Table</string>
+    <string name="selbar_group_clipboard">Clipboard</string>
+    <string name="selbar_group_picture">Picture</string>
+    <string name="selbar_group_turn">Turn, replace and select</string>
+    <string name="selbar_group_arrange">Arrange</string>
+    <string name="selbar_group_export">As an image</string>
+    <string name="selbar_group_lock">Lock</string>
+    <string name="selbar_for_ink">Handwriting and shapes</string>
+    <string name="selbar_for_typed">Sticky notes, text boxes and tables</string>
+    <string name="selbar_for_note">Sticky notes</string>
+    <string name="selbar_for_picture">One picture</string>
+    <string name="selbar_for_edited_picture">One picture, after a crop, flip or turn</string>
+    <string name="selbar_for_table">Tables</string>
+    <string name="selbar_for_paste">While something is copied</string>
+    <string name="selbar_for_turn">Handwriting, shapes and pictures</string>
+</resources>

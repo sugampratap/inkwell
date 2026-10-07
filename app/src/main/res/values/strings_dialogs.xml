@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Name, create, move, confirm and progress sheets (ui/CreateSheets.kt, ui/FolderPicker.kt, MainActivity). -->
+<resources>
+    <string name="import_pdf_title">Import PDF</string>
+    <string name="import_action">Import</string>
+    <!-- %1$s: the folder an import lands in -->
+    <string name="create_into_folder">Into %1$s</string>
+    <!-- %1$s: the name a blank canvas gets ("untitled_3") -->
+    <string name="create_canvas_hint">A canvas has no pages, so there is no paper to set up: it grows in every direction as you write. Leave the name blank to call it %1$s.</string>
+    <!-- %1$s: the folder an import lands in -->
+    <string name="create_import_hint">Named after the file; change it here if you like. It lands in %1$s and opens when you tap it.</string>
+    <string name="create_preview_canvas">Infinite canvas</string>
+    <string name="create_preview_pdf">PDF</string>
+    <string name="create_preview_locked">Locked PDF</string>
+    <string name="name_field">Name</string>
+    <string name="colour_name_note">The name shows on every note and folder with this colour, and in the sidebar’s Tags.</string>
+    <string name="move_moves_into">"Moves into "</string>
+    <string name="move_being_moved">Being moved</string>
+    <!-- %1$s: the folder on screen -->
+    <string name="move_empty_body">Move here still puts them straight into %1$s.</string>
+    <!-- %1$s: "Writing the PDF…"; %2$d: how far the write has got, 0 to 100 -->
+    <string name="export_writing_percent">%1$s %2$d%%</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- The Inkwell look's light background, so launch opens straight onto it with no flash. -->
+    <color name="window_bg">#FFFFFF</color>
+    <color name="accent">#E8821C</color>
+    <color name="loader_bg">#FFFFFF</color>
+    <!-- Fixed launch colours for the splash themes Android 13+ picks per appearance (platform/LaunchLook.kt). -->
+    <color name="launch_light">#FFFFFF</color>
+    <color name="launch_dark">#161616</color>
+    <color name="launch_oled">#000000</color>
+</resources>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Settings screen: its categories, the row titles and their one-line descriptions. -->
+<resources>
+    <string name="settings_search">Search settings</string>
+    <string name="settings_no_results">No settings match \"%1$s\"</string>
+    <string name="settings_back">Back</string>
+
+    <!-- Categories -->
+    <string name="settings_cat_general">General</string>
+    <string name="settings_cat_general_summary">Start-up, toolbar, note names</string>
+    <string name="settings_cat_appearance">Appearance</string>
+    <string name="settings_cat_appearance_summary">Theme, colours, corners</string>
+    <string name="settings_cat_writing">Writing &amp; S Pen</string>
+    <string name="settings_cat_writing_summary">Finger, S Pen button, taps</string>
+    <string name="settings_cat_pages">Pages &amp; paper</string>
+    <string name="settings_cat_pages_summary">Page size, paper colour, zoom</string>
+    <string name="settings_cat_text">Text &amp; fonts</string>
+    <string name="settings_cat_text_summary">Typing, code, imported fonts</string>
+    <string name="settings_cat_library">Library &amp; files</string>
+    <string name="settings_cat_library_summary">Notes folder, layouts, trash</string>
+    <string name="settings_cat_export">Export &amp; sharing</string>
+    <string name="settings_cat_export_summary">PDF export options</string>
+    <string name="settings_cat_advanced">Advanced</string>
+    <string name="settings_cat_advanced_summary">Rendering, diagnostics, reset</string>
+    <string name="settings_cat_about">About</string>
+    <string name="settings_cat_about_summary">Version and credits</string>
+
+    <!-- Section captions -->
+    <string name="settings_sec_startup">Start-up</string>
+    <string name="settings_sec_new_notes">New notes</string>
+    <string name="settings_sec_colours">Colours</string>
+    <string name="settings_sec_finger_taps">Finger taps</string>
+    <string name="settings_sec_toolbar_look">Toolbar</string>
+    <string name="settings_sec_new_pages">New pages</string>
+    <string name="settings_sec_paper">Paper</string>
+    <string name="settings_sec_view">View</string>
+    <string name="settings_sec_typing">Typing</string>
+    <string name="settings_sec_code">Code</string>
+    <string name="settings_sec_fonts">Fonts</string>
+    <string name="settings_sec_storage">Storage</string>
+    <string name="settings_sec_home">Home screen</string>
+    <string name="settings_sec_files">Files</string>
+    <string name="settings_sec_trash">Trash</string>
+    <string name="settings_sec_pdf">PDF</string>
+    <string name="settings_sec_performance">Performance</string>
+    <string name="settings_sec_diagnostics">Diagnostics</string>
+    <string name="settings_sec_reset">Reset</string>
+
+    <!-- General -->
+    <string name="settings_fullscreen">Start in full screen</string>
+    <string name="settings_fullscreen_desc">Hide the status and navigation bars when the app opens</string>
+    <string name="settings_home_opens_to_desc">What the library shows when you come back to it</string>
+    <string name="settings_filename">Note name</string>
+    <string name="settings_filename_desc">Template for the names of new notes</string>
+    <string name="settings_filename_dialog">Name new notes</string>
+
+    <!-- Appearance -->
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_desc">Light, dark, or true black for OLED screens</string>
+    <string name="settings_corners_desc">How rounded menus, cards and buttons are</string>
+    <string name="settings_colour_mode_desc">Where the app\'s accent and surface colours come from</string>
+    <string name="settings_colour_style_desc">How strongly your colour tints the app</string>
+    <string name="settings_contrast">Contrast</string>
+    <string name="settings_contrast_desc">Lower for softer colours, higher for crisper text</string>
+
+    <!-- Writing -->
+    <string name="settings_finger_draws">Draw with finger</string>
+    <string name="settings_finger_draws_desc">Off: only the S Pen writes — a finger or resting palm scrolls and zooms</string>
+    <string name="settings_locked_two_finger_scroll">Two fingers to scroll when zoom is locked</string>
+    <string name="settings_locked_two_finger_scroll_desc">A resting palm can\'t move the page</string>
+    <string name="settings_pen_box">Pen box beside the page</string>
+    <string name="settings_pen_box_desc">Keep your saved pens in a rail at the page\'s edge</string>
+    <string name="settings_detect_shapes">Hold to draw shapes</string>
+    <string name="settings_detect_shapes_desc">Hold the pen still at the end of a stroke to snap it to a line or shape</string>
+
+    <!-- Gestures -->
+    <string name="settings_two_finger_tap_desc">A quick tap with two fingers on the page</string>
+    <string name="settings_three_finger_tap_desc">A quick tap with three fingers on the page</string>
+    <string name="settings_zoom_lock_pan">Scrolling while zoom is locked</string>
+    <string name="settings_zoom_lock_pan_desc">Which fingers move the page when zoom lock is on</string>
+    <string name="settings_pan_one">One finger</string>
+    <string name="settings_pan_two">Two fingers</string>
+    <string name="settings_pen_button_hold">S Pen side button</string>
+    <string name="settings_pen_button_hold_desc">Press and hold: the tool it switches to while held</string>
+    <string name="settings_pen_button_hover">Use while hovering</string>
+    <string name="settings_pen_button_hover_desc">Erase or move the page with the pen just above the screen</string>
+    <string name="settings_stylus_double_tap_desc">Pens that report a barrel double-tap, such as the Huawei M-Pencil</string>
+    <string name="settings_stylus_button_tap_desc">Pens whose side button sends a click, such as the HONOR Magic-Pencil</string>
+    <string name="settings_redmi_1">Redmi Smart Pen, button 1</string>
+    <string name="settings_redmi_2">Redmi Smart Pen, button 2</string>
+    <string name="settings_redmi_desc">A tap on the pen\'s page-key button</string>
+
+    <!-- Toolbar -->
+    <string name="settings_toolbar_style_desc">Pinned to the screen edge, or floating over the page</string>
+    <string name="settings_toolbar_position_desc">Which edge of the screen the toolbar sits on</string>
+    <string name="settings_toolbar_size_desc">How large the toolbar\'s buttons are</string>
+    <string name="settings_toolbar_colours">Colours on the toolbar</string>
+    <string name="settings_toolbar_colours_desc">How many colour swatches the toolbar shows</string>
+    <string name="settings_customise_toolbar">Customise toolbar</string>
+    <string name="settings_customise_toolbar_desc">Choose, order and group the tools on the notebook and canvas toolbars</string>
+    <string name="settings_toolbar_notebook">Notebook</string>
+    <string name="settings_toolbar_canvas">Canvas</string>
+
+    <!-- Pages -->
+    <string name="settings_page_size_desc">The paper size of new notes</string>
+    <string name="settings_orientation_desc">Which way round new pages are laid out</string>
+    <string name="settings_custom_size">Custom size</string>
+    <string name="settings_custom_size_desc">Width and height of a custom page</string>
+    <string name="settings_custom_size_value">%1$s × %2$s mm</string>
+    <string name="settings_page_colour_desc">The paper colour of new pages</string>
+    <string name="settings_page_follows_theme">Match the theme</string>
+    <string name="settings_page_follows_theme_desc">Use the theme\'s paper colour instead of a fixed one</string>
+    <string name="settings_hide_borders">Hide page borders</string>
+    <string name="settings_hide_borders_desc">Leave out the thin outline around each page</string>
+    <string name="settings_side_margin">Side margin</string>
+    <string name="settings_side_margin_desc">Space beside the page when it fits the screen width</string>
+    <string name="settings_px">%1$d px</string>
+    <string name="settings_min_zoom">Minimum zoom</string>
+    <string name="settings_min_zoom_desc">Never zoom out further than this</string>
+    <string name="settings_max_zoom">Maximum zoom</string>
+    <string name="settings_max_zoom_desc">Never zoom in further than this</string>
+    <string name="settings_percent">%1$d%%</string>
+
+    <!-- Text -->
+    <string name="settings_markdown">Markdown shortcuts</string>
+    <string name="settings_markdown_desc">Typing # - ** or ` formats the text as you write</string>
+    <string name="settings_slash">Slash commands</string>
+    <string name="settings_slash_desc">Typing / at the start of a word opens the command menu</string>
+    <string name="settings_code_language">Default code language</string>
+    <string name="settings_code_language_desc">\"Paste as Code\" highlights the pasted block in this language</string>
+    <string name="settings_code_theme">Code theme</string>
+    <string name="settings_code_theme_desc">Import a Helix editor theme (.toml) to recolour code</string>
+    <string name="settings_code_theme_builtin">Built-in</string>
+    <string name="settings_fonts">Imported fonts</string>
+    <string name="settings_fonts_desc">Import a .ttf or .otf to offer it in the text font pickers</string>
+    <string name="settings_import">Import</string>
+
+    <!-- Library -->
+    <string name="settings_notes_folder">Notes folder</string>
+    <string name="settings_notes_folder_desc">Where your notes are stored on this device</string>
+    <string name="settings_notes_folder_none">Not chosen</string>
+    <string name="settings_default_layout_desc">How folders are shown until you pick a view</string>
+    <string name="settings_switcher_layouts_desc">The views offered by the library\'s view switcher</string>
+    <string name="settings_sidebar_sections_desc">What the library sidebar lists</string>
+    <string name="settings_dates_desc">How dates are written in the library</string>
+    <string name="settings_tapping_file_desc">What a tap on a note in the library does</string>
+    <string name="settings_tap_open">Open</string>
+    <string name="settings_tap_preview">Preview</string>
+    <string name="settings_per_folder">Remember view per folder</string>
+    <string name="settings_per_folder_desc">Each folder keeps its own layout and sorting</string>
+    <string name="settings_create_button">Quick-create button</string>
+    <string name="settings_create_button_desc">Show the quick-create button in the library</string>
+    <string name="settings_folder_counts">Item counts on folders</string>
+    <string name="settings_folder_counts_desc">Show how many notes each folder holds</string>
+    <string name="settings_extensions">File extensions</string>
+    <string name="settings_extensions_desc">Show .xnote and .xcanvas after file names</string>
+    <string name="settings_keep_deleted_desc">How long deleted notes wait in Trash before they go for good</string>
+    <string name="settings_colour_names_desc">Names for the colour tags on notes and folders</string>
+
+    <!-- Export -->
+    <string name="settings_pdf_bookmarks">Bookmarks from headings</string>
+    <string name="settings_pdf_bookmarks_desc">Give an exported PDF a bookmark for each heading in the note</string>
+
+    <!-- Advanced -->
+    <string name="settings_cache">Page cache resolution</string>
+    <string name="settings_cache_desc">Higher is smoother when panning and zooming, but uses more memory</string>
+    <string name="settings_front_buffering">Low-latency ink</string>
+    <string name="settings_front_buffering_desc">Draw wet ink straight to the screen. Turn off if ink flickers or lags</string>
+    <string name="settings_debug_overlay">Performance overlay</string>
+    <string name="settings_debug_overlay_desc">Tap a page with four fingers to show or hide frame timings</string>
+    <string name="settings_reset_all">Reset all settings</string>
+    <string name="settings_reset_all_desc">Return every setting to its default. Notes are not touched</string>
+    <string name="settings_reset_confirm_title">Reset all settings?</string>
+    <string name="settings_reset_confirm_body">Every setting returns to its default. Your notes, folders and toolbar layout are not changed.</string>
+    <string name="settings_tag_names">Tag names</string>
+    <plurals name="settings_results">
+        <item quantity="one">%d setting</item>
+        <item quantity="other">%d settings</item>
+    </plurals>
+    <string name="settings_sec_look">Look</string>
+    <string name="settings_sec_writing">Writing</string>
+    <string name="settings_sec_pen_buttons">Pen buttons</string>
+</resources>

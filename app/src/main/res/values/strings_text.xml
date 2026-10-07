@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Part 6 (text) adds its new strings here. Existing strings stay in their own files. -->
+    <!-- Text options card (r3_text Frame 1) -->
+    <string name="text_code_font">Code font</string>
+    <string name="text_size">Size</string>
+    <string name="text_size_pt">%1$d pt</string>
+    <string name="text_page_margins">Page margins</string>
+    <string name="text_mm">mm</string>
+    <string name="text_typing">Typing</string>
+    <string name="text_in_every_note">in every note</string>
+    <string name="text_markdown_hint"># - ** and ` format as you type</string>
+    <string name="text_slash_hint">/ opens the command menu as you type</string>
+    <!-- Format pill and its menus (Frame 2) -->
+    <string name="text_colour">Text colour</string>
+    <string name="text_highlight">Highlight</string>
+    <string name="text_remove_highlight">Remove highlight</string>
+    <string name="text_checklist">Checklist</string>
+    <string name="text_numbered_list">Numbered list</string>
+    <string name="text_more">More formatting</string>
+    <string name="text_insert_table">Insert table…</string>
+    <string name="text_equation_hint">Sets the selected LaTeX as a formula</string>
+    <string name="text_code_language">Code language</string>
+    <string name="text_plain_text">Plain text</string>
+    <string name="text_code_plain_settings">Plain (no highlighting)</string>
+    <!-- Grouped font list (Frame 3) -->
+    <string name="font_shelf_imported">Imported</string>
+    <string name="font_shelf_built_in">Built in</string>
+    <string name="font_shelf_sans">Sans serif</string>
+    <string name="font_shelf_serif">Serif</string>
+    <string name="font_shelf_mono">Monospace</string>
+    <string name="font_mono_tag">mono</string>
+    <string name="font_default_sub">%1$s, the note\'s font</string>
+    <string name="font_list_footer">Add your own in Settings › Text &amp; fonts</string>
+    <!-- Slash menu (Frame 4) -->
+    <string name="slash_checklist_item">Checklist item</string>
+    <string name="slash_table">Table</string>
+    <string name="slash_text_size">Text size</string>
+    <string name="slash_choose">choose</string>
+    <string name="slash_run">run</string>
+    <string name="slash_close">close</string>
+    <string name="slash_types_slash">types a /</string>
+    <string name="slash_key_esc">esc</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Settings › Text, Library, Export, Advanced (ui/SettingsText.kt, ui/SettingsLibrary.kt, ui/SettingsAdvanced.kt). -->
+<resources>
+    <string name="settings_code_footer">Shown when code highlighting is available on this device.</string>
+    <string name="settings_sidebar_pinned_folders">Pinned folders</string>
+    <string name="settings_sidebar_tags">Tags</string>
+    <string name="settings_export_footer">Everything else about an export is chosen each time you share a note.</string>
+    <string name="settings_low_latency_help">Low-latency ink paints the pen’s ink straight into the frame the screen is showing — that is what makes it feel instant. A few panels don’t hand that over cleanly, and there the ink can flicker or fall behind the nib. Turn it off on those and every stroke goes through the ordinary canvas.</string>
+    <string name="settings_four_finger_tap">Four-finger tap</string>
+</resources>

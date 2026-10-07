@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <!-- Debug builds only: every kit component in Light/Dark/OLED, for comparing with the mockups.
+             adb shell am start -n app.inkwell.debug/com.xnotes.kit.KitGalleryActivity -->
+        <activity
+            android:name="com.xnotes.kit.KitGalleryActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Xnotes" />
+    </application>
+</manifest>
